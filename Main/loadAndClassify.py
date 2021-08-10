@@ -8,9 +8,9 @@ import re
 
 SAVEPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data'
 CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\vaiva.csv'
-DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}'
-
-
+DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
+PRICE_REGEX = '^(\d{1,5})$|^(\d{1,5},\d{1,2})$|^(\d{1,2}\.\d{3,3})$|^(\d{1,2}\.\d{3,3},\d{1,2})$'
+WEIGHT_REGEX = '^\d+\,\d\d\d\d$'
 
 model = keras.models.load_model(r'C:\Users\surface\Desktop\YouWe\MLDM\Main\Models\4ClassSimple.h5')
 print("Model Loaded")
@@ -27,9 +27,9 @@ def predictClass(text):
     return score[0]
 
 
-def append_print(a, i, s):
-    a.append(s)
-    print(i, s)
+def append_print(array, index, string):
+    array.append(string)
+    print(index, string)
 
 
 def csvPredicter(csv):
@@ -40,7 +40,6 @@ def csvPredicter(csv):
     targets = le.fit_transform(targets)
     print("LabelEncoder Fitted")
     pred = []
-
     for i in df['input']:
         if i == 'True' or i == 'False':
             score = 'BOOL'
@@ -63,6 +62,12 @@ def csvPredicter(csv):
         elif re.search(DATE_TIME_REGEX, i):
             score = 'DATE_TIME'
             append_print(pred, i, score)
+        elif re.search(PRICE_REGEX, i):
+            score = 'PRICE'
+            append_print(pred, i, score)
+        elif re.search(WEIGHT_REGEX, i):
+            score = 'PROD_WEIGHT'
+            append_print(pred, i ,score)
         else:
             score = 'UNKNOWN'
             # score = predictClass(i)
@@ -77,4 +82,4 @@ def csvPredicter(csv):
 
 csvPredicter(CSV)
 
-# (([123]0|[012][1-9]|31).(0[1-9]|1[012]).(19[0-9]{2}|2[0-9]{3}) ){0,1}([01][0-9]|2[0-3])(.(([0-5][0-9]))){0,5}
+# not classified: PROD_NUM, PROD_NAME

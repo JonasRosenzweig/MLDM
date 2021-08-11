@@ -8,6 +8,7 @@ import re
 
 SAVEPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data'
 CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\vaiva.csv'
+
 DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
 PRICE_REGEX = '^(\d{1,5})$|^(\d{1,5},\d{1,2})$|^(\d{1,2}\.\d{3,3})$|^(\d{1,2}\.\d{3,3},\d{1,2})$'
 WEIGHT_REGEX = '^\d+\,\d\d\d\d$'
@@ -116,3 +117,5 @@ print('Accuracy of ', "{:.2f}".format(accuracy), '%')
 # BOOL (7): PROD_HIDDEN, PROD_VAR_MASTER, PROD_NEW, PROD_FRONT_PAGE, TOPLIST_HIDDEN, OMIT_FROM_FREE_SHIPPING_LIMIT
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED
 # DATE_TIME (2): PROD_CREATED, PROD_EDITED
+
+# 5th commit, only regex no models: 13.65% accuracy

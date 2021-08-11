@@ -7,7 +7,7 @@ import keras
 import re
 
 SAVEPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data'
-CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\vaiva.csv'
+CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\milkywalk.csv'
 
 DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
 PRICE_REGEX = '^(\d{1,5})$|^(\d{1,5},\d{1,2})$|^(\d{1,2}\.\d{3,3})$|^(\d{1,2}\.\d{3,3},\d{1,2})$'
@@ -78,12 +78,12 @@ def csvPredicter(csv):
              'pred': pred}
     dfPred = pd.DataFrame(table)
     os.chdir(SAVEPATH)
-    dfPred.to_csv('testPredict.csv')
+    dfPred.to_csv('testPredict_milkywalk.csv')
 
 
 csvPredicter(CSV)
 
-test_CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data\testPredict.csv'
+test_CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data\testPredict_milkywalk.csv'
 comp_df = df = pd.read_csv(test_CSV, names=['input', 'target', 'pred'], encoding="ISO-8859-1", skiprows=1,
                            low_memory=False, index_col=0)
 compared = comp_df['target'] == comp_df['pred']
@@ -93,14 +93,19 @@ table = {'input': df['input'],
          'compared': compared}
 comp_df = pd.DataFrame(table)
 os.chdir(SAVEPATH)
-comp_df.to_csv('testPredictCompared.csv')
+comp_df.to_csv('testPredictCompared_milkywalk.csv')
 
 count_T = comp_df.compared.sum()
 count_F = (len(comp_df) - (comp_df.compared.sum()))
+count_B = (comp_df.pred == 'BOOL').sum()
+
 print(count_T, 'Correct Classifications out of', len(comp_df))
 print(count_F, 'Incorrect Classifications out of', len(comp_df))
 accuracy = (count_T/len(comp_df))*100
-print('Accuracy of ', "{:.2f}".format(accuracy), '%')
+bool_percent = (count_B/len(comp_df))*100
+print('Accuracy:', "{:.2f}".format(accuracy), '%')
+print('Boolean:', "{:.2f}".format(bool_percent), '%')
+print('Semi-Classified Accuracy with Booleans:', '{:.2f}'.format(accuracy+bool_percent), '%')
 
 
 # not classified with if statements (12):
@@ -118,4 +123,6 @@ print('Accuracy of ', "{:.2f}".format(accuracy), '%')
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED
 # DATE_TIME (2): PROD_CREATED, PROD_EDITED
 
-# 5th commit, only regex no models: 13.65% accuracy
+# 5th commit, only regex no models: 13.65% accuracy on vaiva.csv, 10.82% on milkywalk.csv
+# 6th commit, checking with booleans, still no model: 35.49% on vaiva.csv (21.84% bool), 28.15% on milkywalk (17.33% bool)
+

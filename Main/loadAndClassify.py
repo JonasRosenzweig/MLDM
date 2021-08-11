@@ -50,7 +50,7 @@ def csvPredicter(csv):
         elif i == '26':
             score = 'LANGUAGE_ID'
             append_print(pred, i, score)
-        elif '.jpg' in i or '.jpeg' in i:
+        elif '.jpg' in i or '.jpeg' in i or '.png' in i:
             score = 'PROD_PHOTO_URL'
             append_print(pred, i, score)
         elif '.html' in i or 'https://' in i:
@@ -67,7 +67,7 @@ def csvPredicter(csv):
             append_print(pred, i, score)
         elif re.search(WEIGHT_REGEX, i):
             score = 'PROD_WEIGHT'
-            append_print(pred, i ,score)
+            append_print(pred, i, score)
         else:
             score = 'UNKNOWN'
             # score = predictClass(i)
@@ -82,4 +82,37 @@ def csvPredicter(csv):
 
 csvPredicter(CSV)
 
-# not classified: PROD_NUM, PROD_NAME
+test_CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data\testPredict.csv'
+comp_df = df = pd.read_csv(test_CSV, names=['input', 'target', 'pred'], encoding="ISO-8859-1", skiprows=1,
+                           low_memory=False, index_col=0)
+compared = comp_df['target'] == comp_df['pred']
+table = {'input': df['input'],
+         'target': df['target'],
+         'pred': df['pred'],
+         'compared': compared}
+comp_df = pd.DataFrame(table)
+os.chdir(SAVEPATH)
+comp_df.to_csv('testPredictCompared.csv')
+
+count_T = comp_df.compared.sum()
+count_F = (len(comp_df) - (comp_df.compared.sum()))
+print(count_T, 'Correct Classifications out of', len(comp_df))
+print(count_F, 'Incorrect Classifications out of', len(comp_df))
+accuracy = (count_T/len(comp_df))*100
+print('Accuracy of ', "{:.2f}".format(accuracy), '%')
+
+
+# not classified with if statements (12):
+# PROD_NUM, PROD_NAME, PROD_SORT, PROD_SITE_SPECIFIC_SORTING, VENDOR_NUM, PROD_UNIT_ID, PROD_DELIVERY
+# PROD_CREATED_BY, PROD_EDITED_BY, DESC_SHORT, DESC_LONG, DESC_LONG_2
+
+# if statements/REGEX classified exact (5):
+# LANGUAGE_ID, PROD_WEIGHT, PROD_PHOTO_URL, CURRENCY_CODE, DIRECT_LINK
+
+# if statements/REGEX semi-classified (21):
+# NUMERIC_ID/AMT (9): PROD_MIN_BUY, PROD_MAX_BUY, PROD_TYPE_ID, INTERNAL_ID, STOCK_COUNT, STOCK_LIMIT, PROD_VIEWED
+# NUMERIC_ID/AMT: PROD_SALES_COUNT, PROD_CAT_ID
+# PRICE (3): PROD_RETAIl_PRICE, PROD_COST,  UNIT_PRICE
+# BOOL (7): PROD_HIDDEN, PROD_VAR_MASTER, PROD_NEW, PROD_FRONT_PAGE, TOPLIST_HIDDEN, OMIT_FROM_FREE_SHIPPING_LIMIT
+# BOOL: PROD_SHOW_ON_GOOGLE_FEED
+# DATE_TIME (2): PROD_CREATED, PROD_EDITED

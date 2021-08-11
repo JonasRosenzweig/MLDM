@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from os import listdir
 
-PATH = 'C:/Users/surface/Desktop/YouWe/MLDM/Data/Raw Data'
+PATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Raw Data'
 SAVEPATH = 'C:/Users/surface/Desktop/YouWe/MLDM/Data/2D Data'
 
 list_files = listdir(PATH)

@@ -26,6 +26,11 @@ df = pd.concat(df_list)
 print('Done Concatening files.')
 
 # remove rows with included headers
+unused_headers = ['PROD_PDF_URL_TEXT_3', 'PROD_PDF_URL_TEXT_2', 'PROD_PDF_URL_TEXT', 'PROD_HIDDEN_PERIOD_ID',
+                  'PROD_FILE_URL', 'FIELD_8', 'PROD_NOTES', 'PROD_FRONT_PAGE_PERIOD_ID', 'FIELD_6',
+                  'PROD_PDF_URL_2', 'PROD_PDF_URL', 'FIELD_3', 'PROD_UNIQUE_URL_NAME', 'FIELD_2', 'PROD_NEW_PERIOD_ID',
+                  'FIELD_5', 'PROD_DELIVER_NOT_IN_STOCK', 'PROD_PICTURE_ALT_TEXT', 'PROD_GOOGLE_FEED_CATEGORY',
+                  'PROD_LOCATION_NUMBER', 'DESC_LONG_2', 'DESC_SHORT', 'PROD_SEARCHWORD', 'VENDOR_NUM']
 removed_headers = ['PROD_HIDDEN', 'PROD_VAR_MASTER', 'PROD_NEW', 'PROD_FRONT_PAGE', 'TOPLIST_HIDDEN', 'OMIT_FROM_FREE_SHIPPING_LIMIT',
                    'PROD_CREATED', 'PROD_EDITED', 'PROD_RETAIl_PRICE', 'PROD_COST',  'UNIT_PRICE', 'PROD_MIN_BUY', 'PROD_MAX_BUY',
                    'PROD_TYPE_ID', 'INTERNAL_ID', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_SALES_COUNT', 'PROD_CAT_ID',
@@ -41,10 +46,12 @@ kept_headers = []
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED]
 print(df.Header.nunique())
 df = df[~df.Header.str.contains('|'.join(removed_headers))]
-# df = df.sample(frac=1)
-# df = df.head(300)
+df = df[~df.Header.str.contains('|'.join(unused_headers))]
+df = df.sample(frac=1)
+df = df.head(100)
 print('Removed unwanted headers.')
-df.to_csv('concat_removed_14.csv', index=False)
+df.to_csv('concat_removed_6_100.csv', index=False)
 print('Done saving transformed file.')
 print(df.Header.nunique())
 print(df.Header.unique())
+ #['DESC_LONG' 'MANUFAC_ID' 'PROD_NAME' 'PROD_NUM' 'TITLE' 'META_DESCRIPTION']

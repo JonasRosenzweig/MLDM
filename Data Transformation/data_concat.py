@@ -41,16 +41,20 @@ removed_headers = ['PROD_HIDDEN', 'PROD_VAR_MASTER', 'PROD_NEW', 'PROD_FRONT_PAG
                    'PROD_PDF_URL_3', 'PROD_DELIVERY', 'PROD_DELIVERY_NOT_IN_STOCK', 'FIELD_1', 'FIELD_2', 'FIELD_3', 'FIELD_4', 'FIELD_5',
                    'FIELD_6', 'FIELD_7', 'FIELD_8', 'FIELD_9', 'FIELD_10', 'PROD_FILE_URL', 'ïï\x06Óµ\x07L¸Úb.j"ÿ"%\x165´', 'EDBPriser_NUM',
                    'PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID']
+numid_headers = ['PROD_TYPE_ID', 'INTERNAL_ID', 'PROD_CAT_ID']
 
 kept_headers = []
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED]
 print(df.Header.nunique())
-df = df[~df.Header.str.contains('|'.join(removed_headers))]
-df = df[~df.Header.str.contains('|'.join(unused_headers))]
+
+df = df[df.Header.str.contains('|'.join(numid_headers))]
+#df = df[~df.Header.str.contains('PROD_MIN_BUY_B2B')]
+#df = df[~df.Header.str.contains('|'.join(removed_headers))]
+#df = df[~df.Header.str.contains('|'.join(unused_headers))]
 df = df.sample(frac=1)
 df = df.head(100)
 print('Removed unwanted headers.')
-df.to_csv('concat_removed_6_100.csv', index=False)
+df.to_csv('concat_removed_3_numid_100.csv', index=False)
 print('Done saving transformed file.')
 print(df.Header.nunique())
 print(df.Header.unique())

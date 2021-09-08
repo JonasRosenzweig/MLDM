@@ -7,7 +7,7 @@ import keras
 import re
 
 SAVEPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data'
-CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\blossom.csv'
+CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data\vaiva.csv'
 
 DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
 DATE_REGEX = '^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$'
@@ -153,12 +153,12 @@ def csvPredicter(csv):
                  'new_target': new_target}
     dfClassed = pd.DataFrame(table)
     os.chdir(SAVEPATH)
-    dfClassed.to_csv('testPredModels_blossom.csv')
+    dfClassed.to_csv('testPredModels_vaiva.csv')
 
 
 csvPredicter(CSV)
 
-test_CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data\testPredModels_blossom.csv'
+test_CSV = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Classified Data\testPredModels_vaiva.csv'
 dfClassed = df = pd.read_csv(test_CSV, names=['input', 'target', 'pred', 'new_target'], encoding="ISO-8859-1",
                              skiprows=1,
                              low_memory=False, index_col=0)
@@ -200,3 +200,7 @@ print('Semi-Classified Accuracy (total minus unknowns):', '{:.2f}'.format(100 - 
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED
 # DATE_TIME (2): PROD_CREATED, PROD_EDITED
 # COUNT(4): PROD_SALES_COUNT, STOCK_COUNT, STOCK_LIMIT, PROD_VIEWED
+
+# TODO: Look through prediction tests - f.x PROD_NUM and INTENRAL_ID for blossom
+# TODO: add unknown prediction to predict method, based on confidence
+# TODO: have predict show confidence of prediction

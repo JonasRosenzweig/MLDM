@@ -199,7 +199,7 @@ def classify(path):
     compared_table = {'input': df_intermediate['input'],
                       'target': df_intermediate['target'],
                       'pred': df_intermediate['pred'],
-                      'new_target': df_intermediate['new_target'],
+                      'new_target': df_intermediate['intermediate_tar'],
                       'compared': compared}
     compared_df = pd.DataFrame(compared_table)
     count_T = compared_df.compared.sum()

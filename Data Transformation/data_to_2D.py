@@ -43,4 +43,3 @@ for j in range(len(list_files)):
     cols2DF(data)
 
 print("0 of", len(list_files), "files remaining. \nDone Transforming all files.")
-

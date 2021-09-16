@@ -11,8 +11,9 @@ from os import listdir
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
 CSV = 'vaiva.csv'
 TEST = os.path.join(PATH, CSV)
-frac = 1
+frac = 0.025
 print(TEST)
+accuracies = []
 
 def removePunct(name):
     name = name.replace(" ","_")
@@ -109,7 +110,7 @@ def append_print(array, index, string):
     print(index, string)
 
 
-def classify(path):
+def classify(path, name):
     df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-1',
                      low_memory=False, skiprows=1)
     df = df.sample(frac=frac, random_state=1)
@@ -180,9 +181,9 @@ def classify(path):
         elif i == 'DKK' or i == 'SEK' or i == 'EUR':
             score = 'CURRENCY_CODE'
             append_print(pred, i, score)
-        # elif i == 'admin' or 'mk' or ' sk' or 'jr' or 'pv':
-        #    score = 'AUTHOR'
-        #    append_print(pred, i, score)
+        elif i == 'admin' or 'mk' or ' sk' or 'jr' or 'pv':
+            score = 'AUTHOR'
+            append_print(pred, i, score)
         else:
             targets = ['DESC_LONG', 'MANUFAC_ID', 'PROD_NAME', 'PROD_NUM', 'TITLE', 'META_DESCRIPTION']
             targets = le.fit_transform(targets)
@@ -208,8 +209,22 @@ def classify(path):
     print(count_F, 'Incorrect Classifications out of', len(compared_df))
     accuracy = (count_T / len(compared_df)) * 100
     print('Accuracy:', "{:.2f}".format(accuracy), '%')
-    # return df_intermediate
+    accuracies.append(accuracy)
+    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\test')
+    compared_df.to_csv(name, index=False)
 
 
-classify(TEST)
+list_files = listdir(PATH)
+print("Starting transform of all files in", PATH)
+i = 0
+for j in range(len(list_files)):
+    print(i + len(list_files),  'of', (len(list_files)), "files remaining.")
+    dataset_filename = os.listdir(PATH)[j]
+    dataset_path = os.path.join("../..", PATH, dataset_filename)
+    classify(dataset_path, dataset_filename)
+    i -= 1
 
+with open('accuracies_0025.txt', 'w') as f:
+    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
+    for item in accuracies:
+        f.write(f'{item}\n')

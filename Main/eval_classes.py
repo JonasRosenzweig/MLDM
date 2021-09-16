@@ -9,7 +9,15 @@ classes = ['BOOL', 'DATE_TIME', 'DATE', 'URL', 'PROD_PHOTO_URL', 'PDF', 'LANGUAG
 def evaluate_classes(path):
     df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-1',
                      low_memory=False)
-    print(df['new_target'])
+    for n in range(len(classes)):
+        compared = df['new_target'] == classes[n]
+        for m in range(df.size):
+            if compared[m]:
+                try:
+                    print('test')
+                except KeyError:
+                    pass
+
 
 
 list_files = os.listdir(PATH)

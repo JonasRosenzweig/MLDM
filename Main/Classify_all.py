@@ -11,7 +11,7 @@ from os import listdir
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
 CSV = 'vaiva.csv'
 TEST = os.path.join(PATH, CSV)
-frac = 0.025
+frac = 0.01
 print(TEST)
 accuracies = []
 
@@ -114,6 +114,7 @@ def classify(path, name):
     df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-1',
                      low_memory=False, skiprows=1)
     df = df.sample(frac=frac, random_state=1)
+    df = df.sample(frac=1, random_state=1)
     df = cols_to_2D(df)
     print(df.head(100))
     df = df[~df.Header.str.contains('|'.join(unused_headers))]
@@ -224,7 +225,7 @@ for j in range(len(list_files)):
     classify(dataset_path, dataset_filename)
     i -= 1
 
-with open('accuracies_0025.txt', 'w') as f:
+with open('accuracies_001.txt', 'w') as f:
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
     for item in accuracies:
         f.write(f'{item}\n')

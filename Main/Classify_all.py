@@ -6,6 +6,7 @@ from keras.preprocessing import sequence
 import keras
 import re
 from os import listdir
+from sklearn.utils import shuffle
 
 # Change Raw Data to 2D and reduce based on fraction
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
@@ -114,8 +115,8 @@ def classify(path, name):
     df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-1',
                      low_memory=False, skiprows=1)
     df = df.sample(frac=frac, random_state=1)
-    df = df.sample(frac=1, random_state=1)
     df = cols_to_2D(df)
+    df = df.shuffle(df)
     print(df.head(100))
     df = df[~df.Header.str.contains('|'.join(unused_headers))]
     df = df.astype(str)

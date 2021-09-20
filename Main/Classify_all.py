@@ -116,7 +116,6 @@ def classify(path, name):
                      low_memory=False, skiprows=1)
     df = df.sample(frac=frac, random_state=1)
     df = cols_to_2D(df)
-    df = df.shuffle(df)
     print(df.head(100))
     df = df[~df.Header.str.contains('|'.join(unused_headers))]
     df = df.astype(str)
@@ -183,9 +182,9 @@ def classify(path, name):
         elif i == 'DKK' or i == 'SEK' or i == 'EUR':
             score = 'CURRENCY_CODE'
             append_print(pred, i, score)
-        elif i == 'admin' or 'mk' or ' sk' or 'jr' or 'pv':
-            score = 'AUTHOR'
-            append_print(pred, i, score)
+        # elif i == 'admin' or 'mk' or ' sk' or 'jr' or 'pv':
+        #     score = 'AUTHOR'
+        #     append_print(pred, i, score)
         else:
             targets = ['DESC_LONG', 'MANUFAC_ID', 'PROD_NAME', 'PROD_NUM', 'TITLE', 'META_DESCRIPTION']
             targets = le.fit_transform(targets)
@@ -226,7 +225,7 @@ for j in range(len(list_files)):
     classify(dataset_path, dataset_filename)
     i -= 1
 
-with open('accuracies_001.txt', 'w') as f:
+with open('accuracies_001_no_AUTHOR.txt', 'w') as f:
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
     for item in accuracies:
         f.write(f'{item}\n')

@@ -6,6 +6,7 @@ from keras.preprocessing import sequence
 import keras
 import re
 from os import listdir
+import types
 from sklearn.utils import shuffle
 
 # Change Raw Data to 2D and reduce based on fraction
@@ -143,7 +144,7 @@ def classify(path, name):
 
     pred = []
     for i in df['Data']:
-        if i == 'True' or i == 'False':
+        if i == 'True' or i == 'False' or i == 'TRUE' or i == 'FALSE':
             score = 'BOOL'
             append_print(pred, i, score)
         elif re.search(DATE_TIME_REGEX, i):

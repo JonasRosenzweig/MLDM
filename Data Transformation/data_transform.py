@@ -5,8 +5,8 @@ import pandas as pd
 
 from os import listdir
 
-DATAPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\2D Data'
-SAVEPATH = r'C:\Users\surface\Desktop\YouWe\MLDM\Data\Concatenated Data'
+DATAPATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\2D Data'
+SAVEPATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Concatenated Data'
 
 files = listdir(DATAPATH)
 df_list = []
@@ -32,30 +32,33 @@ unused_headers = ['PROD_PDF_URL_TEXT_3', 'PROD_PDF_URL_TEXT_2', 'PROD_PDF_URL_TE
                   'FIELD_5', 'PROD_DELIVER_NOT_IN_STOCK', 'PROD_PICTURE_ALT_TEXT', 'PROD_GOOGLE_FEED_CATEGORY',
                   'PROD_LOCATION_NUMBER', 'DESC_LONG_2', 'DESC_SHORT', 'PROD_SEARCHWORD', 'VENDOR_NUM']
 removed_headers = ['PROD_HIDDEN', 'PROD_VAR_MASTER', 'PROD_NEW', 'PROD_FRONT_PAGE', 'TOPLIST_HIDDEN', 'OMIT_FROM_FREE_SHIPPING_LIMIT',
-                   'PROD_CREATED', 'PROD_EDITED', 'PROD_RETAIl_PRICE', 'PROD_COST',  'UNIT_PRICE', 'PROD_MIN_BUY', 'PROD_MAX_BUY',
-                   'PROD_TYPE_ID', 'INTERNAL_ID', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_SALES_COUNT', 'PROD_CAT_ID',
-                   'PROD_MIN_BUY', 'PROD_MAX_BUY', 'PROD_TYPE_ID', 'INTERNAL_ID', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_SALES_COUNT',
+                   'PROD_CREATED', 'PROD_EDITED', 'PROD_RETAIl_PRICE', 'PROD_COST',  'UNIT_PRICE', 'PROD_CAT_ID',
                    'PROD_CAT_ID', 'PROD_COST_PRICE', 'LANGUAGE_ID', 'PROD_WEIGHT', 'PROD_PHOTO_URL', 'CURRENCY_CODE', 'DIRECT_LINK',
                    'PROD_SHOW_ON_GOOGLE_FEED', 'PROD_BARCODE_NUMBER', 'PROD_SHOW_ON_FACEBOOK_FEED', 'PROD_UNIQUE_URL_NAME',
                    'PROD_SHOW_ON_PRICERUNNER_FEED', 'PROD_SHOW_ON_KELKOO_FEED', 'PROD_RETAIL_PRICE', 'PROD_PDF_URL', 'PROD_PDF_URL_2',
                    'PROD_PDF_URL_3', 'PROD_DELIVERY', 'PROD_DELIVERY_NOT_IN_STOCK', 'FIELD_1', 'FIELD_2', 'FIELD_3', 'FIELD_4', 'FIELD_5',
                    'FIELD_6', 'FIELD_7', 'FIELD_8', 'FIELD_9', 'FIELD_10', 'PROD_FILE_URL', 'ïï\x06Óµ\x07L¸Úb.j"ÿ"%\x165´', 'EDBPriser_NUM',
-                   'PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID']
-numid_headers = ['PROD_TYPE_ID', 'INTERNAL_ID', 'PROD_CAT_ID']
+                   'PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID', 'PROD_NAME', 'TITLE', 'PROD_NUM', 'DESC_LONG', 'META_DESCRIPTION']
+kept_headers = ['MANUFAC_ID', 'INTERNAL_ID', 'PROD_TYPE_ID']
+count = ['PROD_SALES_COUNT', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_MIN_BUY', 'PROD_MAX_BUY', 'PROD_MIN_BUY_B2B']
 
 kept_headers = []
 # BOOL: PROD_SHOW_ON_GOOGLE_FEED]
 print(df.Header.nunique())
 
-df = df[df.Header.str.contains('|'.join(numid_headers))]
+df = df[df.Header.str.contains('|'.join(kept_headers))]
 #df = df[~df.Header.str.contains('PROD_MIN_BUY_B2B')]
-#df = df[~df.Header.str.contains('|'.join(removed_headers))]
-#df = df[~df.Header.str.contains('|'.join(unused_headers))]
+df = df[~df.Header.str.contains('|'.join(removed_headers))]
+df = df[~df.Header.str.contains('|'.join(unused_headers))]
 df = df.sample(frac=1)
-df = df.head(100)
+for i in range(len(count)):
+    df = df.replace(count[i], 'COUNT')
+#df = df.head(100)
 print('Removed unwanted headers.')
-df.to_csv('concat_removed_3_numid_100.csv', index=False)
+df.to_csv('4_class_training_MANUF_INTER_COUNT_PRODTYPE.csv', index=False)
 print('Done saving transformed file.')
 print(df.Header.nunique())
 print(df.Header.unique())
- #['DESC_LONG' 'MANUFAC_ID' 'PROD_NAME' 'PROD_NUM' 'TITLE' 'META_DESCRIPTION']
+ #['DESC_LONG' 'MANUFAC_ID' 'PROD_NAME' 'PROD_NUM' 'TITLE' 'META_DESCRIPTION'] # -> last one
+
+ #['MANUFAC_ID', 'INTERNAL_ID', 'COUNT', 'PROD_TYPE_ID', 'COUNT'] # -> new one

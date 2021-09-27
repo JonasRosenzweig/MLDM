@@ -17,8 +17,9 @@ frac = 0.01
 print(TEST)
 accuracies = []
 
+
 def removePunct(name):
-    name = name.replace(" ","_")
+    name = name.replace(" ", "_")
     name = name.replace(".", "_")
     return name
 
@@ -30,13 +31,14 @@ def cols_to_2D(df):
         x = df[i]
         x = pd.DataFrame(removePunct(x))
         x['Header'] = i
-        x.rename(columns={i:'Data'}, inplace=True)
+        x.rename(columns={i: 'Data'}, inplace=True)
         dfList.append(x)
         y = pd.concat(dfList)
         y.dropna(axis=0, how='any', inplace=True)
     print(type(y))
-    #print(y)
+    # print(y)
     return y
+
 
 # Load requirements
 
@@ -55,6 +57,14 @@ model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Mode
 model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\5ClassSimpleNumID.h5')
 model_6 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\6ClassSimple.h5')
 model_14 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\14ClassSimple.h5')
+model_PRODCAT_MANU_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                                     r'\3class_prodcat_manu_unknown.h5')
+model_PRODNAME_TITLE_AUTHOR = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                                      r'\3class_prodname_title_author.h5')
+model_COUNT_PRODTYPE_INTERNAL_MANUFAC = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models'
+                                                                r'\organized\4class_count_prodtype_internal_manufac.h5')
+model_DESCLONG_DESCMETA_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models'
+                                                          r'\organized\3class_desclong_descmeta_unknown.h5')
 print("Models Loaded")
 
 # Tokenizers
@@ -63,6 +73,14 @@ tokenizer_3 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_3_
 tokenizer_5 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_5_numID.pkl', 'rb')
 tokenizer_6 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_6.pkl', 'rb')
 tokenizer_14 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_14.pkl', 'rb')
+tokenizer_PRODCAT_MANU_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                      r'\3class_prodcat_manu_unknown.pkl', 'rb')
+tokenizer_PRODNAME_TITLE_AUTHOR = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                       r'\3class_prodname_title_author.pkl', 'rb')
+tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                                 r'\4class_count_prodtype_internal_manufac.pkl', 'rb')
+tokenizer_DESCLONG_DESCMETA_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                                 r'\3class_desclong_descmeta_unknown.pkl', 'rb')
 print("Tokenizers loaded")
 
 tok_3 = pickle.load(tokenizer_3)
@@ -70,9 +88,12 @@ tok_4 = pickle.load(tokenizer_4)
 tok_5 = pickle.load(tokenizer_5)
 tok_6 = pickle.load(tokenizer_6)
 tok_14 = pickle.load(tokenizer_14)
+tok_PRODCAT_MANU_UNKNOWN = pickle.load(tokenizer_PRODCAT_MANU_UNKNOWN)
+tok_PRODNAME_TITLE_AUTHOR = pickle.load(tokenizer_PRODNAME_TITLE_AUTHOR)
+tok_COUNT_PRODTYPE_INTERNAL_MANUFAC = pickle.load(tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC)
+tok_DESCLONG_DESCMETA_UNKNOWN = pickle.load(tokenizer_DESCLONG_DESCMETA_UNKNOWN)
 le = LabelEncoder()
 print("LabelEncoder Loaded")
-
 
 # intermediate classes
 num_id_amt = ['PROD_MIN_BUY', 'PROD_MAX_BUY', 'PROD_TYPE_ID', 'INTERNAL_ID', 'STOCK_COUNT', 'STOCK_LIMIT',
@@ -87,7 +108,8 @@ pdf = ['PROD_PDF_URL', 'PROD_PDF_URL_2', 'PROD_PDF_URL_3', 'PROD_FILE_URL']
 fields = ['FIELD_1', 'FIELD_2', 'FIELD_3', 'FIELD_4', 'FIELD_5', 'FIELD_6', 'FIELD_7', 'FIELD_8', 'FIELD_9', 'FIELD_10']
 unsure = ['PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID']
 url = ['PROD_UNIQUE_URL_NAME', 'DIRECT_LINK']
-count = ['PROD_SALES_COUNT', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_MIN_BUY', 'PROD_MAX_BUY', 'PROD_MIN_BUY_B2B']
+count = ['PROD_SALES_COUNT', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_MIN_BUY', 'PROD_MAX_BUY',
+         'PROD_MIN_BUY_B2B']
 author = ['PROD_CREATED_BY', 'PROD_EDITED_BY']
 unused_headers = ['PROD_PDF_URL_TEXT_3', 'PROD_PDF_URL_TEXT_2', 'PROD_PDF_URL_TEXT', 'PROD_HIDDEN_PERIOD_ID',
                   'PROD_FILE_URL', 'FIELD_8', 'PROD_NOTES', 'PROD_FRONT_PAGE_PERIOD_ID', 'FIELD_6',
@@ -220,7 +242,7 @@ list_files = listdir(PATH)
 print("Starting transform of all files in", PATH)
 i = 0
 for j in range(len(list_files)):
-    print(i + len(list_files),  'of', (len(list_files)), "files remaining.")
+    print(i + len(list_files), 'of', (len(list_files)), "files remaining.")
     dataset_filename = os.listdir(PATH)[j]
     dataset_path = os.path.join("../..", PATH, dataset_filename)
     classify(dataset_path, dataset_filename)

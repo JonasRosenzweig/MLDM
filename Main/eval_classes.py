@@ -279,7 +279,7 @@ table = {'CSV': csv_name, 'BOOL': BOOL_list, 'DATE_TIME': DATE_TIME_list, 'DATE'
          'META_DESCRIPTION': META_DESCRIPTION_list}
 class_accuracies_df = pd.DataFrame(table)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
-class_accuracies_df.to_csv('class_accuracies_no_Author.csv')
+class_accuracies_df.to_csv('class_accuracies_new_logic_7_class.csv')
 
 # class_accuracies = list(chain(BOOL_list, DATE_TIME_list, DATE_list, URL_list, PROD_PHOTO_URL_list, PDF_list,
 #                                 LANGUAGE_ID_list, COUNT_list, INTERNAL_ID_list, PROD_CAT_ID_list, PROD_TYPE_ID_list,

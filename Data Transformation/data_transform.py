@@ -40,7 +40,8 @@ removed_headers = ['PROD_HIDDEN', 'PROD_VAR_MASTER', 'PROD_NEW', 'PROD_FRONT_PAG
                    'PROD_PDF_URL_3', 'PROD_DELIVERY', 'PROD_DELIVERY_NOT_IN_STOCK', 'FIELD_1', 'FIELD_2', 'FIELD_3', 'FIELD_4', 'FIELD_5',
                    'FIELD_6', 'FIELD_7', 'FIELD_8', 'FIELD_9', 'FIELD_10', 'PROD_FILE_URL', 'ïï\x06Óµ\x07L¸Úb.j"ÿ"%\x165´', 'EDBPriser_NUM',
                    'PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID', 'PROD_NUM']
-kept_headers = ['PROD_NAME', 'TITLE', 'PROD_CREATED_BY', 'PROD_EDITED_BY']
+kept_headers = ['PROD_NAME', 'TITLE', 'PROD_CREATED_BY', 'PROD_EDITED_BY', 'DESC_LONG', 'META_DESCRIPTION', 'MANUFAC_ID',
+                'PROD_CAT_ID']
 count = ['PROD_SALES_COUNT', 'STOCK_COUNT', 'STOCK_LIMIT', 'PROD_VIEWED', 'PROD_MIN_BUY', 'PROD_MAX_BUY', 'PROD_MIN_BUY_B2B']
 description = ['DESC_LONG', 'META_DESCRIPTION']
 author = ['PROD_CREATED_BY', 'PROD_EDITED_BY']
@@ -50,7 +51,7 @@ print('Nunique headers:', df.Header.nunique())
 print('unique headers:', df.Header.unique())
 
 df = df[df.Header.str.contains('|'.join(kept_headers))]
-#df = df[~df.Header.str.contains('PROD_MIN_BUY_B2B')]
+df = df[~df.Header.str.contains('DESC_LONG_2')]
 #df = df[~df.Header.str.contains('|'.join(count))]
 #df = df[~df.Header.str.contains('|'.join(description))]
 #df = df[~df.Header.str.contains('|'.join(removed_headers))]
@@ -63,10 +64,10 @@ for n in range(len(author)):
 # for j in range(len(unused_headers)):
 #     df = df.replace(unused_headers[j], 'UNKNOWN')
 # for k in range(len(count)):
-#     df = df.replace(count[k], 'UNKNOWN')
-#df = df.head(100)
+#     df = df.replace(count[k], 'COUNT')
+df = df.head(100)
 print('Removed unwanted headers.')
-df.to_csv('3_class_PRODNAME_TITLE_AUTHOR.csv', index=False)
+df.to_csv('7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID_100.csv', index=False)
 print('Done saving transformed file.')
 print('Nunique headers:', df.Header.nunique())
 print('unique headers:', df.Header.unique())

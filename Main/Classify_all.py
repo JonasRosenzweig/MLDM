@@ -13,7 +13,7 @@ from sklearn.utils import shuffle
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
 CSV = 'vaiva.csv'
 TEST = os.path.join(PATH, CSV)
-frac = 0.01
+frac = 0.0005
 print(TEST)
 accuracies = []
 
@@ -65,6 +65,8 @@ model_COUNT_PRODTYPE_INTERNAL_MANUFAC = keras.models.load_model(r'C:\Users\mail\
                                                                 r'\organized\4class_count_prodtype_internal_manufac.h5')
 model_DESCLONG_DESCMETA_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models'
                                                           r'\organized\3class_desclong_descmeta_unknown.h5')
+model_7 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                  r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.h5')
 print("Models Loaded")
 
 # Tokenizers
@@ -80,7 +82,9 @@ tokenizer_PRODNAME_TITLE_AUTHOR = open(r'C:\Users\mail\PycharmProjects\MLDM\Main
 tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
                                                  r'\4class_count_prodtype_internal_manufac.pkl', 'rb')
 tokenizer_DESCLONG_DESCMETA_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
-                                                 r'\3class_desclong_descmeta_unknown.pkl', 'rb')
+                                           r'\3class_desclong_descmeta_unknown.pkl', 'rb')
+tokenizer_7 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                   r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.pkl', 'rb')
 print("Tokenizers loaded")
 
 tok_3 = pickle.load(tokenizer_3)
@@ -92,6 +96,7 @@ tok_PRODCAT_MANU_UNKNOWN = pickle.load(tokenizer_PRODCAT_MANU_UNKNOWN)
 tok_PRODNAME_TITLE_AUTHOR = pickle.load(tokenizer_PRODNAME_TITLE_AUTHOR)
 tok_COUNT_PRODTYPE_INTERNAL_MANUFAC = pickle.load(tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC)
 tok_DESCLONG_DESCMETA_UNKNOWN = pickle.load(tokenizer_DESCLONG_DESCMETA_UNKNOWN)
+tok_7 = pickle.load(tokenizer_7)
 le = LabelEncoder()
 print("LabelEncoder Loaded")
 
@@ -135,6 +140,7 @@ def append_print(array, index, string):
 
 
 def classify(path, name):
+    global table
     df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-1',
                      low_memory=False, skiprows=1)
     df = df.sample(frac=frac, random_state=1)
@@ -169,11 +175,11 @@ def classify(path, name):
         if i == 'True' or i == 'False' or i == 'TRUE' or i == 'FALSE':
             score = 'BOOL'
             append_print(pred, i, score)
-        elif re.search(DATE_TIME_REGEX, i):
-            score = 'DATE_TIME'
-            append_print(pred, i, score)
         elif re.search(DATE_REGEX, i):
             score = 'DATE'
+            append_print(pred, i, score)
+        elif re.search(DATE_TIME_REGEX, i):
+            score = 'DATE_TIME'
             append_print(pred, i, score)
         elif re.search(URL_REGEX, i) or '.html' in i or 'https://' in i:
             score = 'URL'
@@ -184,17 +190,14 @@ def classify(path, name):
         elif '.pdf' in i:
             score = 'PDF'
             append_print(pred, i, score)
-        elif i == '26':
-            score = 'LANGUAGE_ID'
-            append_print(pred, i, score)
         elif i.isnumeric():
-            if re.search(INTEGER_REGEX, i):
-                score = 'COUNT'
+            if i == '26':
+                score = 'LANGUAGE_ID'
                 append_print(pred, i, score)
             else:
-                targets_num = ['INTERNAL_ID', 'PROD_CAT_ID', 'PROD_TYPE_ID']
-                targets_num = le.fit_transform(targets_num)
-                score = predictClass(i, tok_3, model_3)
+                targets = ['COUNT', 'PROD_TYPE_ID', 'INTERNAL_ID', 'MANUFAC_ID']
+                targets = le.fit_transform(targets)
+                score = predictClass(i, tok_COUNT_PRODTYPE_INTERNAL_MANUFAC, model_COUNT_PRODTYPE_INTERNAL_MANUFAC)
                 append_print(pred, i, score)
         elif re.search(WEIGHT_REGEX, i):
             score = 'PROD_WEIGHT'
@@ -205,13 +208,10 @@ def classify(path, name):
         elif i == 'DKK' or i == 'SEK' or i == 'EUR':
             score = 'CURRENCY_CODE'
             append_print(pred, i, score)
-        # elif i == 'admin' or 'mk' or ' sk' or 'jr' or 'pv':
-        #     score = 'AUTHOR'
-        #     append_print(pred, i, score)
         else:
-            targets = ['DESC_LONG', 'MANUFAC_ID', 'PROD_NAME', 'PROD_NUM', 'TITLE', 'META_DESCRIPTION']
+            targets = ['PROD_NAME', 'AUTHOR', 'TITLE', 'DESC_LONG', 'META_DESCRIPTION', 'MANUFAC_ID', 'PROD_CAT_ID']
             targets = le.fit_transform(targets)
-            score = predictClass(i, tok_6, model_6)
+            score = predictClass(i, tok_7, model_7)
             append_print(pred, i, score)
         table = {'input': df['Data'],
                  'target': df['Header'],
@@ -248,7 +248,7 @@ for j in range(len(list_files)):
     classify(dataset_path, dataset_filename)
     i -= 1
 
-with open('accuracies_001_no_AUTHOR.txt', 'w') as f:
+with open('accuracies_00005_new_logic_6_class.txt', 'w') as f:
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
     for item in accuracies:
         f.write(f'{item}\n')

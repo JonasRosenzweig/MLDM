@@ -67,6 +67,8 @@ model_DESCLONG_DESCMETA_UNKNOWN = keras.models.load_model(r'C:\Users\mail\Pychar
                                                           r'\organized\3class_desclong_descmeta_unknown.h5')
 model_7 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
                                   r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.h5')
+model_8 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                                  r'\8_class_PNUM_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.h5')
 print("Models Loaded")
 
 # Tokenizers
@@ -85,6 +87,8 @@ tokenizer_DESCLONG_DESCMETA_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\
                                            r'\3class_desclong_descmeta_unknown.pkl', 'rb')
 tokenizer_7 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
                    r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.pkl', 'rb')
+tokenizer_8 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+                   r'\8_class_PNUM_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.pkl', 'rb')
 print("Tokenizers loaded")
 
 tok_3 = pickle.load(tokenizer_3)
@@ -97,6 +101,7 @@ tok_PRODNAME_TITLE_AUTHOR = pickle.load(tokenizer_PRODNAME_TITLE_AUTHOR)
 tok_COUNT_PRODTYPE_INTERNAL_MANUFAC = pickle.load(tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC)
 tok_DESCLONG_DESCMETA_UNKNOWN = pickle.load(tokenizer_DESCLONG_DESCMETA_UNKNOWN)
 tok_7 = pickle.load(tokenizer_7)
+tok_8 = pickle.load(tokenizer_8)
 le = LabelEncoder()
 print("LabelEncoder Loaded")
 
@@ -206,9 +211,9 @@ def classify(path, name):
             score = 'CURRENCY_CODE'
             append_print(pred, i, score)
         else:
-            targets = ['PROD_NAME', 'AUTHOR', 'TITLE', 'DESC_LONG', 'META_DESCRIPTION', 'MANUFAC_ID', 'PROD_CAT_ID']
+            targets = ['DESC_LONG', 'AUTHOR', 'PROD_NUM', 'TITLE', 'MANUFAC_ID', 'PROD_CAT_ID', 'META_DESCRIPTION', 'PROD_NAME']
             targets = le.fit_transform(targets)
-            score = predictClass(i, tok_7, model_7)
+            score = predictClass(i, tok_8, model_8)
             append_print(pred, i, score)
         table = {'input': df['Data'],
                  'target': df['Header'],
@@ -245,7 +250,7 @@ for j in range(len(list_files)):
     classify(dataset_path, dataset_filename)
     i -= 1
 
-with open('accuracies_00005_new_logic_7_class_datefix.txt', 'w') as f:
+with open('accuracies_00005_new_logic_8_class.txt', 'w') as f:
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
     for item in accuracies:
         f.write(f'{item}\n')

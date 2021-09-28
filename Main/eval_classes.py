@@ -270,8 +270,8 @@ for j in range(len(list_files)):
     csv_name.append(dataset_filename)
     evaluate_classes_2(dataset_path)
     i -= 1
-table = {'CSV': csv_name, 'BOOL': BOOL_list, 'DATE_TIME': DATE_TIME_list, 'DATE': DATE_list, 'URL': URL_list,
-         'PROD_PHOTO_URL': PROD_PHOTO_URL_list, 'PDF': PDF_list, 'LANGUAGE_ID': LANGUAGE_ID_list,
+table = {'CSV': csv_name, 'BOOL': BOOL_list, 'DATE': DATE_list, 'URL': URL_list,
+         'PROD_PHOTO_URL': PROD_PHOTO_URL_list, 'LANGUAGE_ID': LANGUAGE_ID_list,
          'COUNT': COUNT_list, 'INTERNAL_ID': INTERNAL_ID_list, 'PROD_CAT_ID': PROD_CAT_ID_list,
          'PROD_TYPE_ID': PROD_TYPE_ID_list, 'PROD_WEIGHT': PROD_WEIGHT_list, 'PRICE': PRICE_list,
          'CURRENCY_CODE': CURRENCY_CODE_list, 'AUTHOR': AUTHOR_list, 'DESC_LONG': DESC_LONG_list,
@@ -279,7 +279,7 @@ table = {'CSV': csv_name, 'BOOL': BOOL_list, 'DATE_TIME': DATE_TIME_list, 'DATE'
          'META_DESCRIPTION': META_DESCRIPTION_list}
 class_accuracies_df = pd.DataFrame(table)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
-class_accuracies_df.to_csv('class_accuracies_new_logic_7_class_datefix.csv')
+class_accuracies_df.to_csv('class_accuracies_new_logic_8_class.csv')
 
 # class_accuracies = list(chain(BOOL_list, DATE_TIME_list, DATE_list, URL_list, PROD_PHOTO_URL_list, PDF_list,
 #                                 LANGUAGE_ID_list, COUNT_list, INTERNAL_ID_list, PROD_CAT_ID_list, PROD_TYPE_ID_list,

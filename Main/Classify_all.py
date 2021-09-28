@@ -44,7 +44,7 @@ def cols_to_2D(df):
 
 # REGEX
 DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
-DATE_REGEX = '^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$'
+DATE_REGEX = '([0-3]?\d\/{1})([01]?\d\/{1})([12]{1}\d{3}\/?)'
 PRICE_REGEX = '^(\d{1,5})$|^(\d{1,5},\d{1,2})$|^(\d{1,2}\.\d{3,3})$|^(\d{1,2}\.\d{3,3},\d{1,2})$'
 WEIGHT_REGEX = '^\d+\,\d\d\d\d$'
 URL_REGEX = '[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?'
@@ -248,7 +248,7 @@ for j in range(len(list_files)):
     classify(dataset_path, dataset_filename)
     i -= 1
 
-with open('accuracies_00005_new_logic_6_class.txt', 'w') as f:
+with open('accuracies_00005_new_logic_7_class_datefix.txt', 'w') as f:
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
     for item in accuracies:
         f.write(f'{item}\n')

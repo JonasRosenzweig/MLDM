@@ -43,7 +43,7 @@ def cols_to_2D(df):
 # Load requirements
 
 # REGEX
-DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9])(.)[0-9]{2}:[0-9]{2}$'
+DATE_TIME_REGEX = '([0-9]|0[0-9]|1[0-9]|2[0-9])-([0-9][0-9]|[0-9])-[0-9]{4} ([0-9]|0[0-9]|1[0-9]|2[0-9])(.)[0-9]{2}:[0-9]{2}'
 DATE_REGEX = '([0-3]?\d\/{1})([01]?\d\/{1})([12]{1}\d{3}\/?)'
 PRICE_REGEX = '^(\d{1,5})$|^(\d{1,5},\d{1,2})$|^(\d{1,2}\.\d{3,3})$|^(\d{1,2}\.\d{3,3},\d{1,2})$'
 WEIGHT_REGEX = '^\d+\,\d\d\d\d$'
@@ -107,8 +107,7 @@ num_price = ['PROD_RETAIl_PRICE', 'PROD_COST', 'UNIT_PRICE', 'PROD_COST_PRICE', 
 boolean = ['PROD_HIDDEN', 'PROD_VAR_MASTER', 'PROD_NEW', 'PROD_FRONT_PAGE', 'TOPLIST_HIDDEN',
            'OMIT_FROM_FREE_SHIPPING_LIMIT', 'PROD_SHOW_ON_GOOGLE_FEED', 'PROD_SHOW_ON_GOOGLE_FEED',
            'PROD_SHOW_ON_FACEBOOK_FEED', 'PROD_SHOW_ON_PRICERUNNER_FEED', 'PROD_SHOW_ON_KELKOO_FEED']
-date_time = ['PROD_CREATED', 'PROD_EDITED']
-date = ['PROD_DELIVERY', 'PROD_DELIVERY_NOT_IN_STOCk']
+date = ['PROD_CREATED', 'PROD_EDITED', 'PROD_DELIVERY', 'PROD_DELIVERY_NOT_IN_STOCk']
 pdf = ['PROD_PDF_URL', 'PROD_PDF_URL_2', 'PROD_PDF_URL_3', 'PROD_FILE_URL']
 fields = ['FIELD_1', 'FIELD_2', 'FIELD_3', 'FIELD_4', 'FIELD_5', 'FIELD_6', 'FIELD_7', 'FIELD_8', 'FIELD_9', 'FIELD_10']
 unsure = ['PROD_SORT', 'PROD_SITE_SPECIFIC_SORTING', 'PROD_UNIT_ID']
@@ -153,8 +152,6 @@ def classify(path, name):
     for j in df['Header']:
         if j in boolean:
             intermediate_tar.append('BOOL')
-        elif j in date_time:
-            intermediate_tar.append('DATE_TIME')
         elif j in date:
             intermediate_tar.append('DATE')
         elif j in url:
@@ -179,7 +176,7 @@ def classify(path, name):
             score = 'DATE'
             append_print(pred, i, score)
         elif re.search(DATE_TIME_REGEX, i):
-            score = 'DATE_TIME'
+            score = 'DATE'
             append_print(pred, i, score)
         elif re.search(URL_REGEX, i) or '.html' in i or 'https://' in i:
             score = 'URL'

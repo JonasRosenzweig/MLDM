@@ -4,14 +4,13 @@ import pickle
 import keras
 from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing import sequence
-from itertools import repeat
 import numpy as np
 import json
 
 threshold = 0.75
 sample_amount = 25
 
-#CSV = r'/root/ADM_Data/bisgaard_NOOS_data.csv'
+#CSV = r'/var/www/html/ADM_Data/Joha produkter.csv'
 CSV = r'C:\Users\mail\Downloads\data\Joha produkter.csv'
 df = pd.read_csv(CSV, error_bad_lines=False, engine='c', encoding='ISO-8859-1', low_memory=False)
 df = df.astype(str)
@@ -23,8 +22,8 @@ if len(df.index > sample_amount):
     except ValueError:
         pass
 df = df.reset_index(drop=True)
-#model = keras.models.load_model(r'/root/ADM_Data/6_class_MVP.h5')
-#tokenizer = pickle.load(open(r'/root/ADM_Data/6_class_MVP.pkl','rb'))
+#model = keras.models.load_model(r'/var/www/html/ADM_Data/6_class_MVP.h5')
+#tokenizer = pickle.load(open(r'/var/www/html/ADM_Data/6_class_MVP.pkl','rb'))
 model = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.h5')
 tokenizer = pickle.load(open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.pkl', 'rb'))
 le = LabelEncoder()
@@ -96,7 +95,7 @@ maps_object_json = json.dumps(maps_object)
 jsondf = pd.DataFrame(maps_object)
 json_maps = jsondf.to_json()
 #print(json_maps)
-#os.chdir(r'/root/ADM_Data/json_maps')
+#os.chdir(r'/var/www/html/ADM_Data/json_maps')
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
 with open('map.json', 'w') as file:
     file.write(json_maps)

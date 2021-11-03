@@ -6,16 +6,26 @@ from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing import sequence
 import numpy as np
 import json
+from pathlib import Path
 
 threshold = 0.75
 sample_amount = 25
 
 #CSV = r'/var/www/html/ADM_Data/Joha produkter.csv'
-CSV = r'C:\Users\mail\Downloads\data\Joha produkter.csv'
+#CSV = r'C:\Users\mail\Downloads\data\Joha produkter.csv'
+#Path = r'/var/www/html/ADM/public/temp'
+PATH = r'C:\Users\mail\Downloads\data\test'
+list_files = os.listdir(PATH)
+#CSV = r'C:\Users\mail\Downloads\data\Modern_Classic_Opstart.csv'
+for j in range(len(list_files)):
+    dataset_filename = os.listdir(PATH)[j]
+    CSV = os.path.join("../..", PATH, dataset_filename)
+print(dataset_filename)
+
 df = pd.read_csv(CSV, error_bad_lines=False, engine='c', encoding='ISO-8859-1', low_memory=False)
 df = df.astype(str)
-print(len(df.index))
-print(len(df.index) > sample_amount)
+#print(len(df.index))
+#print(len(df.index) > sample_amount)
 if len(df.index > sample_amount):
     try:
         df = df.sample(sample_amount, random_state=7)
@@ -41,8 +51,11 @@ def predictClass(text, tok, model):
 col_dict = {df.columns.get_loc(c): c for idx, c in enumerate(df.columns)}
 map_list = []
 maps_object = []
+Predictions = []
+Certainty = []
 
 lists = list(map(list, col_dict.items()))
+Columns = list(df.columns)
 
 for n in (range(len(col_dict))):
     print('----------Mapping column {num} of {len}----------'.format(num=n, len=len(col_dict)))
@@ -50,6 +63,8 @@ for n in (range(len(col_dict))):
     df_select = df_select.astype(str)
     class_map = []
     multiple_pred = []
+    multiple_predictions = []
+    multiple_certainties = []
     for m in (range(len(df_select))):
         class_predictions = []
         targets = ['Name', 'Description', 'Category', 'Price', 'Amount', 'EAN']
@@ -70,9 +85,12 @@ for n in (range(len(col_dict))):
                                          class_len=len(df_select),
                                          origin=col_dict[n]))
         class_map.append([col_dict[n], predicted_count.index[0]])
+        Predictions.append(predicted_count.index[0])
+        Certainty.append(100)
 
 
     else:
+        print(predicted_count)
         print('There is no Majority Predicted Class above the threshold.')
         for i in range(len(predicted_count) - 2):
             print('Predicted classes:', predicted_count.index[i], ', predictions:', predicted_count.iloc[i], '/',
@@ -83,20 +101,35 @@ for n in (range(len(col_dict))):
                             class_len=len(df_select),
                             origin=col_dict[n]))
             multiple_pred.append([col_dict[n], predicted_count.index[i]])
+            multiple_predictions.append(predicted_count.index[i])
+            multiple_certainties.append(predicted_count.iloc[i]/len(df_select)*100)
         class_map.append(multiple_pred)
+        Predictions.append(multiple_predictions)
+        Certainty.append(multiple_certainties)
     print('Original Class:', col_dict[n])
     print('__________________________________________')
     map_list.append(class_predictions)
     maps_object.append(class_map)
 
-maps_object_json = json.dumps(maps_object)
-#print('map_list:', map_list)
-#print('maps_object:', maps_object)
-jsondf = pd.DataFrame(maps_object)
-json_maps = jsondf.to_json()
-#print(json_maps)
+print('Predictions:', Predictions)
+print('Certainty:', Certainty)
+
+json_map = {"Columns": []}
+json_pred_cert = {}
+for i in range(len(Columns)):
+    json_map["Columns"].append({"Original Class {i}".format(i=i+1): Columns[i],
+                                "Model Prediction(s)": []})
+    json_map["Columns"][i]["Model Prediction(s)"]\
+            .append({"Prediction": (Predictions[i]), "Certainty": (Certainty[i])})
+print(json_map)
+json_map = json.dumps(json_map)
+
 #os.chdir(r'/var/www/html/ADM_Data/json_maps')
+
+dataset_filename = Path(dataset_filename)
+dataset_filename = dataset_filename.with_suffix('.json')
+print(dataset_filename)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
-with open('map.json', 'w') as file:
-    file.write(json_maps)
+with open(dataset_filename, 'w') as file:
+    file.write(json_map)
 

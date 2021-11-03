@@ -13,7 +13,7 @@ sample_amount = 25
 
 #CSV = r'/var/www/html/ADM_Data/Joha produkter.csv'
 #CSV = r'C:\Users\mail\Downloads\data\Joha produkter.csv'
-#Path = r'/var/www/html/ADM/public/temp'
+#PATH = r'/var/www/html/ADM/public/temp'
 PATH = r'C:\Users\mail\Downloads\data\test'
 list_files = os.listdir(PATH)
 #CSV = r'C:\Users\mail\Downloads\data\Modern_Classic_Opstart.csv'

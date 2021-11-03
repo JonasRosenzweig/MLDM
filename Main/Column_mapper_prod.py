@@ -116,12 +116,18 @@ print('Certainty:', Certainty)
 
 json_map = {"Columns": []}
 json_pred_cert = {}
+print(json_map)
+
 for i in range(len(Columns)):
     json_map["Columns"].append({"Original Class {i}".format(i=i+1): Columns[i],
                                 "Model Prediction(s)": []})
-    json_map["Columns"][i]["Model Prediction(s)"]\
+    if isinstance(Predictions[i], list):
+        json_map["Columns"][i]["Model Prediction(s)"] \
             .append({"Prediction": (Predictions[i]), "Certainty": (Certainty[i])})
-print(json_map)
+    else:
+        json_map["Columns"][i]["Model Prediction(s)"]\
+            .append({"Prediction": [(Predictions[i])], "Certainty": [(Certainty[i])]})
+
 json_map = json.dumps(json_map)
 
 #os.chdir(r'/var/www/html/ADM_Data/json_maps')

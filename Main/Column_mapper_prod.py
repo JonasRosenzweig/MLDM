@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 import glob
 
-threshold = 0.75
-sample_amount = 1
+threshold = 0.51
+sample_amount = 10
 
 PATH2 = r'C:\Users\mail\Downloads\data\test\*.csv'
 list_files2 = glob.glob(PATH2)

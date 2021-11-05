@@ -12,12 +12,12 @@ from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing import sequence
 
 
-THRESHOLD = 0.75
-SAMPLE_AMOUNT = 2
+THRESHOLD = 0.51
+SAMPLE_AMOUNT = 10
 RANDOM_STATE = 7
 TARGETS = ['Name', 'Description', 'Category', 'Price', 'Amount', 'EAN']
 
-uploads_path = r'C:\Users\mail\Downloads\data\test\reformat_test\*.csv'
+uploads_path = r'C:\Users\mail\Downloads\data\reformat_test*.csv'
 #uploads_path = r'/var/www/html/ADM/public/temp'
 
 # list files in directory
@@ -25,7 +25,6 @@ list_files = glob.glob(uploads_path)
 
 # select latest file in directory
 recent_upload = max(list_files, key=os.path.getctime)
-filename = os.path.basename(recent_upload)
 
 # load uploaded .csv into pandas dataframe
 df = pd.read_csv(recent_upload,
@@ -152,6 +151,7 @@ json_map = json.dumps(json_map)
 
 #os.chdir(r'/var/www/html/ADM_Data/json_maps')
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
+filename = os.path.basename(recent_upload)
 json_filename = filename.with_suffix('json')
 with open(json_filename, 'w') as file:
     file.write(json_map)

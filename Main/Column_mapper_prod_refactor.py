@@ -17,7 +17,7 @@ SAMPLE_AMOUNT = 10
 RANDOM_STATE = 7
 TARGETS = ['Name', 'Description', 'Category', 'Price', 'Amount', 'EAN']
 
-uploads_path = r'C:\Users\mail\Downloads\data\reformat_test*.csv'
+uploads_path = r'C:\Users\mail\Downloads\data\reformat_test\*.csv'
 #uploads_path = r'/var/www/html/ADM/public/temp'
 
 # list files in directory

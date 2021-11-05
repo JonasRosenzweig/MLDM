@@ -7,9 +7,16 @@ from keras.preprocessing import sequence
 import numpy as np
 import json
 from pathlib import Path
+import glob
 
 threshold = 0.75
-sample_amount = 25
+sample_amount = 1
+
+PATH2 = r'C:\Users\mail\Downloads\data\test\*.csv'
+list_files2 = glob.glob(PATH2)
+CSV2 = max(list_files2, key=os.path.getctime)
+print('CSV2', CSV2)
+print('CSV2File', os.path.basename(CSV2))
 
 #CSV = r'/var/www/html/ADM_Data/Joha produkter.csv'
 #CSV = r'C:\Users\mail\Downloads\data\Joha produkter.csv'
@@ -132,9 +139,9 @@ json_map = json.dumps(json_map)
 
 #os.chdir(r'/var/www/html/ADM_Data/json_maps')
 
-dataset_filename = Path(dataset_filename)
+dataset_filename = Path(os.path.basename(CSV2))
 dataset_filename = dataset_filename.with_suffix('.json')
-print(dataset_filename)
+print('file', dataset_filename)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
 with open(dataset_filename, 'w') as file:
     file.write(json_map)

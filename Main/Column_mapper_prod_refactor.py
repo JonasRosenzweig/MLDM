@@ -151,8 +151,9 @@ json_map = json.dumps(json_map)
 
 #os.chdir(r'/var/www/html/ADM_Data/json_maps')
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
-filename = os.path.basename(recent_upload)
-json_filename = filename.with_suffix('json')
+filename = Path(os.path.basename(recent_upload))
+json_filename = filename.with_suffix('.json')
+print(json_filename)
 with open(json_filename, 'w') as file:
     file.write(json_map)
 

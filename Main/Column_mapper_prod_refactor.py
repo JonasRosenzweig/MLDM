@@ -56,6 +56,8 @@ def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
     predict_x = model.predict(text_pad)
     predict_class = np.argmax(predict_x, axis=1)
+    print('score:', predict_x)
+    print('argmax:', predict_class)
     score = le.inverse_transform(predict_class)
     prediction = score[0]
     return prediction
@@ -153,7 +155,6 @@ json_map = json.dumps(json_map)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
 filename = Path(os.path.basename(recent_upload))
 json_filename = filename.with_suffix('.json')
-print(json_filename)
 with open(json_filename, 'w') as file:
     file.write(json_map)
 

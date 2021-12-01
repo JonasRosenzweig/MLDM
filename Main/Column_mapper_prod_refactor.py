@@ -56,8 +56,8 @@ def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
     predict_x = model.predict(text_pad)
     predict_class = np.argmax(predict_x, axis=1)
-    print('score:', predict_x)
-    print('argmax:', predict_class)
+    #print('score:', predict_x)
+    #print('argmax:', predict_class)
     score = le.inverse_transform(predict_class)
     prediction = score[0]
     return prediction

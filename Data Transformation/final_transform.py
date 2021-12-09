@@ -9,8 +9,7 @@ classes = ['PROD_NAME', 'PROD_NUM', 'UNIT_PRICE', 'PROD_BARCODE_NUMBER', 'OTHER'
 df = pd.DataFrame(columns=['PRODUCTS', '','','',''])
 classes_series = pd.Series(classes, index=df.columns)
 df = df.append(classes_series, ignore_index=True)
-df.head()
-
+df.to_csv('test1.csv', index=False)
 
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
 list_files = listdir(PATH)
@@ -31,6 +30,6 @@ for j in range(len(list_files)):
     data_list.append(data)
     i -= 1
 
-df = pd.concat(data_list)
+dfc = pd.concat(data_list)
 print(df.shape)
-df.to_csv('test.csv', index=False)
+dfc.to_csv('test.csv', index=False)

@@ -37,7 +37,7 @@ for j in range(len(list_files)):
             dfList.append(x)
             y = pd.concat(dfList)
             y.dropna(axis=0, how='any', inplace=True)
-        y.to_csv('6_class_MVP_dataset_v3_unknowns_no_duplicates_2D.csv', index=False)
+        y.to_csv('6_class_MVP_dataset_2D_test.csv', index=False)
 
     os.chdir(SAVEPATH)
     cols2DF(data)

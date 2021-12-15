@@ -33,7 +33,7 @@ TOKENIZER_DIR =\
     r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.pkl'
 
 THRESHOLD = 0.51
-SAMPLE_AMOUNT = 100
+SAMPLE_AMOUNT = 10
 RANDOM_STATE = 7
 TARGETS = ['PROD_NAME', 'PROD_NUM', 'OTHER']
 model = keras.models.load_model(MODEL_DIR)
@@ -57,6 +57,7 @@ k = 0
 def evaluate(num):
     correct = 0
     dataset_filename = os.listdir(PATH)[num]
+    mapped_filename = 'mapped_'+dataset_filename
     print('________________________________________________________________________')
     print('----------{}----------'.format(dataset_filename))
     dataset_path = os.path.join("../..", PATH, dataset_filename)
@@ -79,6 +80,7 @@ def evaluate(num):
     map_list = []
     maps_object = []
     Predictions = []
+    Maj_Pred = []
     Certainty = []
 
 
@@ -128,6 +130,7 @@ def evaluate(num):
                           len=len(df_select),
                           origin=column_headers[n]))
             Predictions.append(column_predictions_count.index[0])
+            Maj_Pred.append(column_predictions_count.index[0])
             Certainty.append(100)
 
         else:
@@ -143,6 +146,7 @@ def evaluate(num):
                 multiple_predictions.append(column_predictions_count.index[i])
                 multiple_certainties.append(column_predictions_count.iloc[i] / len(df_select) * 100)
             Predictions.append(multiple_predictions)
+            Maj_Pred.append(column_predictions_count.index[0])
             Certainty.append(multiple_certainties)
 
         print('________________________________________________')
@@ -154,8 +158,8 @@ def evaluate(num):
     print('Percentages:', Certainty)
     print(df.head())
     df_renamed = df.copy()
-    print(len(Predictions))
-    df_renamed.columns = Predictions
+    print(len(Maj_Pred))
+    df_renamed.columns = Maj_Pred
     del df_renamed['OTHER']
     print(df_renamed.head())
     Multi_Header1 = ['PRODUCTS']
@@ -165,7 +169,10 @@ def evaluate(num):
     print('length multi', len(Multi_Header1))
     df_renamed.columns = pd.MultiIndex.from_arrays([Multi_Header1, df_renamed.columns])
     print(df_renamed.head())
+    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Output')
+    df_renamed.to_csv(mapped_filename, index=False)
 
 
 
-evaluate(21)
+
+evaluate(25)

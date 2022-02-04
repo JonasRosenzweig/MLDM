@@ -96,6 +96,7 @@ def predictClass(text, tok, model):
     prediction = score[0]
     return prediction
 
+Predictions_list = []
 # evaluate method - takes a path of .csv product feed data
 # returns evaluation metrics
 def evaluate(path):
@@ -104,10 +105,11 @@ def evaluate(path):
     SAMPLE_AMOUNT = 2
     RANDOM_STATE = 7
     k = 0
-    Predictions = []
+
 
     # for file in path
     for i in range(len(listfiles)):
+        Predictions = []
         correct = 0
         dataset_filename = os.listdir(path)[i]
         print(dataset_filename)
@@ -134,7 +136,6 @@ def evaluate(path):
             # for data in column
             for k in range(len(df_select)):
                 try:
-                    #print('File:', Mapped_Targets_list[i][0])
                     print('Target:', Mapped_Targets_list[i][j+1])
                 except IndexError:
                     pass
@@ -163,9 +164,10 @@ def evaluate(path):
                 Predictions.append(column_predictions_count.index[0])
             else:
                 Predictions.append(column_predictions_count.index[0])
+        Predictions_list.append(Predictions)
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Output')
     with open('predictions.txt', 'w') as output:
-        output.write(str(Predictions))
+        output.write(str(Predictions_list))
 
 evaluate(EVAL_path)
 

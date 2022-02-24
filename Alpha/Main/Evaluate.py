@@ -1,9 +1,6 @@
-
-import re
 import os
 import pickle
 import keras
-import statistics
 
 import numpy as np
 import pandas as pd
@@ -51,6 +48,28 @@ TARGETS = ['OTHER', 'NAME', 'PRICE', 'SIZE', 'COLOR']
 OTHER_list, EAN_list, PRICE_list, NAME_list, COLOR_list, SIZE_list = [], [], [], [], [],[]
 Features_lists = [OTHER_list, EAN_list, PRICE_list, NAME_list, COLOR_list, SIZE_list]
 
+# lists for custom rules
+OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','%', 'Color Number',
+                 'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Fit','lukning',
+                 'Category','category','Kategori','kategori','Weight','weight','Qty.','Customer','Units','Age','age',
+                 'delivery','date','Date','Delivery','description','Description','Delivery','Season','Køn','Gender',
+                 'Account','No.','Stock','stock','pct.','month','Composition','composition','available','Finish',
+                 'Order Closing','Washing','Beskrivelse 2', 'In Stock', 'Available','Date', 'Per Display', 'Weight',
+                 'Division', 'Delivery', 'Brand', 'Drop', 'No', 'Quality', 'Weigth', 'length', 'height', 'Pieces',
+                 'Style no', 'Colour no', 'Color no', 'Item no.', 'Article Number', 'Total number of pairs']
+PRICE_Headers = ['price','Price','Cost','VAT','Retail','Subtotal','Sub total','total','sub total','subtotal','RRP',
+                 'Wholesale','wholesale','udsalgspris','pris','Pris','Udsalgspris','Katalogpris','katalogpris']
+COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name']
+SIZE_Headers = ['Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål']
+Headers_Rule_List = [OTHER_Headers, PRICE_Headers, COLOR_Headers, SIZE_Headers]
+
+# check if substring in list
+def Substring_match(match_list, string):
+    for y in range(len(match_list)):
+        if match_list[y] in string:
+            return True
+
+
 for i in range(len(Mapped_Targets_list)):
     for j in range(len(Mapped_Targets_list[i])):
         if (Mapped_Targets_list[i][j]) == 'OTHER':
@@ -68,16 +87,6 @@ for i in range(len(Mapped_Targets_list)):
 
 for i in range(len(Features_lists)):
     Features_lists[i] = remove_duplicates(Features_lists[i])
-    #print(Features_lists[i])
-
-
-#print(list(Mapped_Headers_df.iloc[1]))
-#print(list(Mapped_Targets_df.iloc[1]))
-
-#print(Mapped_Targets_df.iloc[1][1])
-
-#print(len(Mapped_Headers_df.index))
-#print(len(Mapped_Targets_df.index))
 
 model = keras.models.load_model(Model_path)
 tokenizer = pickle.load(open(Tokenizer_path, 'rb'))
@@ -98,14 +107,14 @@ def predictClass(text, tok, model):
 
 Predictions_list = []
 # evaluate method - takes a path of .csv product feed data
-# returns evaluation metrics
+# returns evaluation metrics: .txt, .csv
+# returns .json map
 def evaluate(path):
     listfiles = listdir(path)
     THRESHOLD = 0.51
-    SAMPLE_AMOUNT = 2
+    SAMPLE_AMOUNT = 30
     RANDOM_STATE = 7
     k = 0
-
 
     # for file in path
     for i in range(len(listfiles)):
@@ -125,7 +134,6 @@ def evaluate(path):
         column_headers = list(df.columns)
         predictions_map = list(map(lambda item: [item], column_headers))
         predictions_only = list(map(lambda item: [item], column_headers))
-        print(predictions_map)
 
         # for column in file
         for j in range(len(column_headers)):
@@ -142,18 +150,31 @@ def evaluate(path):
                 targets = TARGETS
                 targets = le.fit_transform(targets)
                 data = df_select[k]
-                if validate_EAN(data):
+                print(data, column_headers[j])
+                if Substring_match(OTHER_Headers, column_headers[j]) or len(data) > 200:
+                    predicted_class = 'CR-OTHER'
+                    print('Custom rule applied - OTHER')
+                elif Substring_match(PRICE_Headers, column_headers[j]):
+                        predicted_class = 'CR-PRICE'
+                        print('Custom rule applied - PRICE')
+                elif Substring_match(COLOR_Headers, column_headers[j]):
+                        predicted_class = 'CR-COLOR'
+                        print('Custom rule applied - COLOR')
+                elif Substring_match(SIZE_Headers, column_headers[j]):
+                        predicted_class = 'CR-SIZE'
+                        print('Custom rule applied - SIZE')
+                elif validate_EAN(data):
                     predicted_class = 'EAN'
-                elif len(data) > 200:
-                    predicted_class = 'OTHER'
                 elif data == 'nan':
                     predicted_class = 'NAN'
                 else:
+                    print('Model Prediction:')
                     predicted_class = predictClass(data, tokenizer, model)
+
                 predictions_map[j].append(predicted_class)
                 predictions_only[j].append(predicted_class)
-                print('prediction:', predicted_class)
-                print('_________')
+            print('prediction:', predicted_class)
+            print('_________')
 
             predictions_only[j].pop(0)
             column_predictions = (predictions_only[j])
@@ -166,8 +187,10 @@ def evaluate(path):
                 Predictions.append(column_predictions_count.index[0])
         Predictions_list.append(Predictions)
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Output')
-    with open('predictions.txt', 'w') as output:
+    with open('predictions_custom_rules_test.txt', 'w') as output:
         output.write(str(Predictions_list))
+    predictions_df = pd.DataFrame(Predictions_list)
+    predictions_df.to_csv('predictions_custom_rules_test.csv')
 
 evaluate(EVAL_path)
 

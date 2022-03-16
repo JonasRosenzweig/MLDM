@@ -23,12 +23,12 @@ uploads_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product
 OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','%', 'Color Number',
                  'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Fit','lukning',
                  'Category','category','Kategori','kategori','Weight','weight','Qty.','Customer','Units','Age','age',
-                 'delivery','date','Date','Delivery','description','Description','Delivery','Season','Køn','Gender',
+                 'delivery','date','Date','Delivery','Delivery','Season','Køn','Gender',
                  'Account','No.','Stock','stock','pct.','month','Composition','composition','available','Finish',
                  'Order Closing','Washing','Beskrivelse 2', 'In Stock', 'Available','Date', 'Per Display', 'Weight',
                  'Division', 'Delivery', 'Brand', 'Drop', 'No', 'Quality', 'Weigth', 'length', 'height', 'Pieces',
                  'Style no', 'Colour no', 'Color no', 'Item no.', 'Article Number', 'Total number of pairs',
-                 'Farve kode', 'interval', 'toldnummer', 'LÃḊngde']
+                 'Farve kode', 'interval', 'toldnummer', 'LÃḊngde', 'Tarif']
 PRICE_Headers = ['price','Price','Cost','VAT','Retail','Subtotal','Sub total','total','sub total','subtotal','RRP',
                  'Wholesale','wholesale','udsalgspris','pris','Pris','Udsalgspris','Katalogpris','katalogpris']
 COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name']
@@ -140,8 +140,8 @@ for n in range(len(column_headers)):
         elif predictClass(data, tokenizer, model) == 'NAME':
             predicted_class = 'PROD_NAME'
         else:
-            print('Model Prediction:', predicted_class)
             predicted_class = predictClass(data, tokenizer, model)
+            print('Model Prediction:', predicted_class)
         predictions_map[n].append(predicted_class)
         predictions_only[n].append(predicted_class)
         print('Data: {data}, OC: {OC}, Prediction: {pred}'
@@ -219,16 +219,7 @@ print(df.head())
 df_renamed = df.copy()
 print(len(Maj_Pred))
 df_renamed.columns = Maj_Pred
-del df_renamed['OTHER']
-del df_renamed['NAN']
-try:
-    df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.COLOR, sep=', Color: ')
-except ValueError:
-    pass
-try:
-    df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.SIZE, sep=', Size ')
-except ValueError:
-    pass
+
 df_prices = df_renamed.filter(like='UNIT_PRICE')
 df_prices = df_prices.astype(float)
 prices = []
@@ -252,13 +243,31 @@ cost_dict = {'COST_PRICE': cost_prices}
 retail_dict = {'UNIT_PRICE': retail_prices}
 df_cost_prices = pd.DataFrame(cost_dict)
 df_retail_prices = pd.DataFrame(retail_dict)
-del df_renamed['UNIT_PRICE']
+try:
+    del df_renamed['UNIT_PRICE']
+except KeyError:
+    pass
 df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices], axis=1, join='inner')
 print(df_cost_prices)
 print(df_retail_prices)
 print(prices)
 print(prices[0][0])
 print(prices[1][0])
+
+try:
+    del df_renamed['OTHER']
+except KeyError:
+    pass
+try:
+    del df_renamed['NAN']
+except KeyError:
+    pass
+
+df_renamed = df_renamed.loc[:,~df_renamed.columns.duplicated()]
+df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.COLOR, sep=', Color: ')
+df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.SIZE, sep=', Size ')
+
+
 print(df_renamed.head())
 Multi_Header1 = ['PRODUCTS']
 for y in range(len(df_renamed.columns)-1):

@@ -60,7 +60,7 @@ OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materia
 PRICE_Headers = ['price','Price','Cost','VAT','Retail','Subtotal','Sub total','total','sub total','subtotal','RRP',
                  'Wholesale','wholesale','udsalgspris','pris','Pris','Udsalgspris','Katalogpris','katalogpris']
 COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name']
-SIZE_Headers = ['Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål']
+SIZE_Headers = ['Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål', 'StÃẁrrelse']
 Headers_Rule_List = [OTHER_Headers, PRICE_Headers, COLOR_Headers, SIZE_Headers]
 
 # check if substring in list

@@ -20,6 +20,7 @@ TARGETS = ['OTHER', 'NAME', 'UNIT_PRICE', 'SIZE', 'COLOR']
 uploads_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds\*.csv'
 
 # lists for custom rules classification
+NAME_Headers = ['Style Name']
 OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','%', 'Color Number',
                  'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Fit','lukning',
                  'Category','category','Kategori','kategori','Weight','weight','Qty.','Customer','Units','Age','age',
@@ -140,6 +141,9 @@ def classify(df, save_name, json_name):
             elif Substring_match(EAN_Headers, column_headers[n]):
                 predicted_class = 'PROD_BARCODE_NUMBER'
                 print('Custom rule applied - EAN')
+            elif Substring_match(NAME_Headers, column_headers[n]):
+                predicted_class = 'PROD_NAME'
+                print('Custom rule applied - NAME')
             elif validate_ean(data):
                 predicted_class = 'PROD_BARCODE_NUMBER'
             elif data == 'nan' or data == '0' or data == 0:

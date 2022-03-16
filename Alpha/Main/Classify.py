@@ -90,13 +90,13 @@ df = read_csv(recent_upload)
 # sample SAMPLE_AMOUNT of rows from df with equal probability
 if len(df.index >= SAMPLE_AMOUNT):
     try:
-        df = df.sample(SAMPLE_AMOUNT,  random_state=RANDOM_STATE)
+        df_sampled = df.sample(SAMPLE_AMOUNT,  random_state=RANDOM_STATE)
     except ValueError:
         pass
-df = df.reset_index(drop=True)
+df_sampled = df_sampled.reset_index(drop=True)
 
 # column headers list
-column_headers = list(df.columns)
+column_headers = list(df_sampled.columns)
 
 # predictions map - predictions will be appended, matching the column header
 predictions_map = list(map(lambda item: [item], column_headers))
@@ -109,7 +109,7 @@ predictions_only = list(map(lambda item: [item], column_headers))
 for n in range(len(column_headers)):
     print('-----------Mapping column {num} of {len}-----------'
           .format(num=n+1, len=len(column_headers)))
-    df_select = df[column_headers[n]]
+    df_select = df_sampled[column_headers[n]]
     df_select = df_select.astype(str)
     multiple_predictions = []
     multiple_certainties = []
@@ -215,7 +215,7 @@ print('map list:', predictions_map)
 #print('predictions only:', predictions_only)
 print('Predictions:', Predictions)
 print('Percentages:', Certainty)
-print(df.head())
+print(df_sampled.head())
 df_renamed = df.copy()
 print(len(Maj_Pred))
 df_renamed.columns = Maj_Pred

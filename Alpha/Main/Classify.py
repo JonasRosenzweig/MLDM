@@ -20,22 +20,41 @@ TARGETS = ['OTHER', 'NAME', 'UNIT_PRICE', 'SIZE', 'COLOR']
 uploads_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds\*.csv'
 
 # lists for custom rules classification
-NAME_Headers = ['Style Name']
+NAME_Headers = ['Style Name', 'Article Name', 'ïṠṡNavn']
 OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','%', 'Color Number',
                  'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Fit','lukning',
                  'Category','category','Kategori','kategori','Weight','weight','Qty.','Customer','Units','Age','age',
                  'delivery','date','Date','Delivery','Delivery','Season','Køn','Gender',
                  'Account','No.','Stock','stock','pct.','month','Composition','composition','available','Finish',
-                 'Order Closing','Washing','Beskrivelse 2', 'In Stock', 'Available','Date', 'Per Display', 'Weight',
+                 'Order Closing','Washing', 'In Stock', 'Available','Date', 'Per Display', 'Weight',
                  'Division', 'Delivery', 'Brand', 'Drop', 'No', 'Quality', 'Weigth', 'length', 'height', 'Pieces',
                  'Style no', 'Colour no', 'Color no', 'Item no.', 'Article Number', 'Total number of pairs',
-                 'Farve kode', 'interval', 'toldnummer', 'LÃḊngde', 'Tarif']
+                 'Farve kode', 'interval', 'toldnummer', 'LÃḊngde', 'Tarif', 'Item number', 'SKU']
 PRICE_Headers = ['price','Price','Cost','VAT','Retail','Subtotal','Sub total','total','sub total','subtotal','RRP',
-                 'Wholesale','wholesale','udsalgspris','pris','Pris','Udsalgspris','Katalogpris','katalogpris']
-COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name']
-SIZE_Headers = ['Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål','StÃẁrrelse']
+                 'Wholesale','wholesale','udsalgspris','pris','Pris','Udsalgspris','Katalogpris','katalogpris',
+                 'Vejl.uds', 'M.S.R.P', 'R.R.P. DKK']
+COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name', 'Color', 'Farve beskrivelse']
+SIZE_Headers = ['MÅL', 'Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål','StÃẁrrelse']
 EAN_Headers = ['Barcode']
+Exact_OTHER_Headers = ['brand', 'width_mm', 'hs_code', 'country_of_origin', 'description', 'Style nr.',
+                       'Marketing Text (ENU)', 'Marketing Text (DAN)', 'Dess.', 'Collection', 'Country of Ori.',
+                       'Compos.', 'Brand', 'Per Case', 'Dessin', 'Currency', 'Del. week', 'Material', 'Origin',
+                       'Kundens referencetekst', 'Composition ', 'Varenummer', 'Style #', 'Brugstarif', 'ArticleNumber',
+                       'Country', 'Oprindelsesland', 'Style Number', 'Længde', 'Department', 'Launch Month', 'id',
+                       'Order no.', 'Discount', 'Art. Nr', 'Country of orgin', 'Top categories', 'HS Code',
+                       'Article ID', 'LP', 'LOT', 'SalesCurr', 'Toldnummer', 'Style number']
+Exact_NAME_Headers = ['Name', 'title', 'name', 'Style name', 'Style name ', 'Varenavn', 'Product name', 'Navn']
+Exact_SIZE_Headers = ['Dimensions']
+Exact_COLOR_Headers = ['Col. Descrip.', 'Colour', 'Col.text', 'Farve_1']
+Exact_PRICE_Headers = ['Rek SKR Ex Moms', 'Veil NKR', 'M.S.R.P (EUR)', 'WHS DKK', 'WHS EUR', 'WHS NOK', 'WHS SEK',
+                       'WHS USD', 'WHSP', 'Vejl DKK', 'Vejl NOK', 'Vejl SEK', 'MSRP EUR', 'R.R.P. DKK']
+output = []
 
+def print_and_save(s):
+    print(s)
+    output.append(s)
+
+replace_strings = ['DKK', 'SEK', 'NOK', 'USD', 'EUR', 'GBP', ',', 'ïṠṡ']
 # list files in directory
 list_files = glob.glob(uploads_path)
 
@@ -44,7 +63,7 @@ recent_upload = max(list_files, key=os.path.getctime)
 
 # read csv params
 def read_csv(path):
-    return pd.read_csv(path, error_bad_lines=False, engine='c', encoding='ISO-8859-14',
+    return pd.read_csv(path, error_bad_lines=False, engine='c', encoding='UTF-8',
                        low_memory=False, dtype=str)
 
 # EAN validator
@@ -75,14 +94,27 @@ def predictClass(text, tok, model):
 
 # check if substring in list
 def Substring_match(match_list, string):
-    for y in range(len(match_list)):
-        if match_list[y] in string:
+    for item in match_list:
+        if item in string:
+            return True
+
+# check if String in list
+def String_match(match_list, string):
+    for item in match_list:
+        if item == string:
             return True
 
 def remove_punct(string):
     string = string.replace(",", "")
     return string
 
+def fix_encoding(df):
+    df.replace('Ãẁ', 'ø', inplace=True, regex=True)
+    df.replace('ÃḊ', 'æ', inplace=True, regex=True)
+    df.replace('Ãċ', 'å', inplace=True, regex=True)
+    df.replace('Ãƒáº', 'ø', inplace=True, regex=True)
+    df.replace('ÃƒÄ‹', 'æ', inplace=True, regex=True)
+    df.replace('ÃƒÄ‹', 'å', inplace=True, regex=True)
 
 # load csv into df
 df_recent = read_csv(recent_upload)
@@ -118,41 +150,53 @@ def classify(df, save_name, json_name):
 
 
     for n in range(len(column_headers)):
-        print('-----------Mapping column {num} of {len}-----------'
+        print_and_save('-----------Mapping column {num} of {len}-----------'
               .format(num=n+1, len=len(column_headers)))
         df_select = df_sampled[column_headers[n]]
         df_select = df_select.astype(str)
+        fix_encoding(df_select)
+
+        for item in replace_strings:
+            df_select = df_select.replace(item, '')
+
         for m in range(len(df_select)):
             targets = TARGETS
             target = le.fit_transform(targets)
             data = df_select[m]
-            if Substring_match(OTHER_Headers, column_headers[n] or len(data) > 200):
+            if Substring_match(OTHER_Headers, column_headers[n] or len(data) > 200)\
+                    or String_match(Exact_OTHER_Headers, column_headers[n]) or data == '0':
                 predicted_class = 'OTHER'
                 print('Custom rule applied - OTHER')
-            elif Substring_match(COLOR_Headers, column_headers[n]):
+            elif Substring_match(COLOR_Headers, column_headers[n]) \
+                    or String_match(Exact_COLOR_Headers, column_headers[n]):
                 predicted_class = 'COLOR'
                 print('Custom rule applied - COLOR')
-            elif Substring_match(PRICE_Headers, column_headers[n]):
+            elif Substring_match(PRICE_Headers, column_headers[n]) \
+                    or String_match(Exact_PRICE_Headers, column_headers[n]):
                 predicted_class = 'UNIT_PRICE'
                 print('Custom rule applied - PRICE')
-            elif Substring_match(SIZE_Headers, column_headers[n]):
+            elif Substring_match(SIZE_Headers, column_headers[n]) \
+                    or String_match(Exact_SIZE_Headers, column_headers[n]):
                 predicted_class = 'SIZE'
                 print('Custom rule applied - SIZE')
             elif Substring_match(EAN_Headers, column_headers[n]):
                 predicted_class = 'PROD_BARCODE_NUMBER'
                 print('Custom rule applied - EAN')
-            elif Substring_match(NAME_Headers, column_headers[n]):
+            elif Substring_match(NAME_Headers, column_headers[n]) \
+                    or String_match(Exact_NAME_Headers, column_headers[n]):
                 predicted_class = 'PROD_NAME'
                 print('Custom rule applied - NAME')
             elif validate_ean(data):
                 predicted_class = 'PROD_BARCODE_NUMBER'
+                print('EAN Validator applied')
             elif data == 'nan' or data == '0' or data == 0:
                 predicted_class = 'NAN'
             elif predictClass(data, tokenizer, model) == 'NAME':
                 predicted_class = 'PROD_NAME'
+                print_and_save('Model Prediction: {f}'.format(f=predicted_class))
             else:
                 predicted_class = predictClass(data, tokenizer, model)
-                print('Model Prediction:', predicted_class)
+                print_and_save('Model Prediction: {f}'.format(f=predicted_class))
             predictions_map[n].append(predicted_class)
             predictions_only[n].append(predicted_class)
             print('Data: {data}, OC: {OC}, Prediction: {pred}'
@@ -161,18 +205,17 @@ def classify(df, save_name, json_name):
         column_predictions = (predictions_only[n])
         column_predictions_series = pd.Series(column_predictions)
         column_predictions_count = column_predictions_series.value_counts()
-        print('map list:', predictions_map)
-        print('predictions only:', predictions_only)
-        print('column predictions:', column_predictions)
-        print('column predictons series:', column_predictions_series)
-        print('column predictions count:', column_predictions_count)
-        print('Majority class:', column_predictions_count.index[0])
-        print('Number of predictions:', column_predictions_count.iloc[0])
-        print('____________________________')
+        print_and_save('predictions only: {f}'.format(f=predictions_only))
+        print_and_save('column predictions: {f}'.format(f=column_predictions))
+        print_and_save('column predictons series: {f}'.format(f=column_predictions_series))
+        print_and_save('column predictions count: {f}'.format(f=column_predictions_count))
+        print_and_save('Majority class: {f}'.format(f=column_predictions_count.index[0]))
+        print_and_save('Number of predictions: {f}'.format(f=column_predictions_count.iloc[0]))
+        print_and_save('____________________________')
 
         if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
-            print(column_predictions_count.index[0], 'is the majority prediction.')
-            print('The majority class is: {pred} with {num_pred} of {len} predictions.'
+            print_and_save('{f} is the majority prediction.'.format(f=column_predictions_count.index[0]))
+            print_and_save('The majority class is: {pred} with {num_pred} of {len} predictions.'
                   '\n Original Class: {original}'
                   .format(pred=column_predictions_count.index[0],
                           num_pred=column_predictions_count.iloc[0],
@@ -183,11 +226,11 @@ def classify(df, save_name, json_name):
             Certainty.append(100)
 
         else:
-            print('There is no majority class'
+            print_and_save('There is no majority class'
                   '\n Original class: {original}'
                   .format(original=column_headers[n]))
             for i in range(len(column_predictions_count)):
-                print('Predicted class {i}: {pred} with {num_pred} of {len} predictions'
+                print_and_save('Predicted class {i}: {pred} with {num_pred} of {len} predictions'
                       .format(i=i+1,
                               pred=column_predictions_count.index[i],
                               num_pred=column_predictions_count.iloc[i],
@@ -197,7 +240,7 @@ def classify(df, save_name, json_name):
             Predictions.append(multiple_predictions)
             Maj_Pred.append(column_predictions_count.index[0])
             Certainty.append(multiple_certainties)
-
+    print_and_save('map list: {f}'.format(f=predictions_map))
     json_map = {"Columns": []}
     json_pred_cert = {}
 
@@ -221,11 +264,11 @@ def classify(df, save_name, json_name):
     with open(json_filename, 'w') as file:
         file.write(json_map)
 
-    print('----------Dataset Mapping Summary----------')
-    print('map list:', predictions_map)
+    print_and_save('----------Dataset Mapping Summary----------')
+    print_and_save('map list: {f}'.format(f=predictions_map))
     #print('predictions only:', predictions_only)
-    print('Predictions:', Predictions)
-    print('Percentages:', Certainty)
+    print_and_save('Predictions: {f}'.format(f=Predictions))
+    print_and_save('Percentages: {f}'.format(f=Certainty))
     print(df_sampled.head())
     df_renamed = df.copy()
     print(len(Maj_Pred))
@@ -233,6 +276,14 @@ def classify(df, save_name, json_name):
     df_renamed.columns = Maj_Pred
 
     df_prices = df_renamed.filter(like='UNIT_PRICE')
+    df_colors = df_renamed.filter(like='COLOR')
+    df_colors = df_colors.replace('\d+', '', regex=True)
+    for column in df_colors:
+        try:
+            if pd.to_numeric(df_colors[column], errors='coerce').notnull().all():
+                del df_colors[column]
+        except TypeError:
+            pass
     try:
         df_prices = df_prices.astype(float)
     except ValueError:
@@ -263,27 +314,21 @@ def classify(df, save_name, json_name):
         pass
     try:
         del df_renamed['UNIT_PRICE']
+        del df_renamed['COLOR']
     except KeyError:
         pass
     try:
-        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices], axis=1, join='inner')
+        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices, df_colors], axis=1, join='inner')
     except UnboundLocalError:
         pass
     try:
         del df_renamed['OTHER']
-    except KeyError:
-        pass
-    try:
         del df_renamed['NAN']
     except KeyError:
         pass
-
     df_renamed = df_renamed.loc[:,~df_renamed.columns.duplicated()]
     try:
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.COLOR, sep=', Color: ')
-    except AttributeError:
-        pass
-    try:
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.SIZE, sep=', Size ')
     except AttributeError:
         pass
@@ -298,11 +343,16 @@ def classify(df, save_name, json_name):
     df_renamed.to_csv(mapped_filename, index=False)
 
 for i in range(len(list_files)):
-    print('Classifyng File: ', list_files[i])
+    print_and_save('Classifyng File: {f}'.format(f=list_files[i]))
     df_select = read_csv(list_files[i])
     filename = Path(os.path.basename(list_files[i]))
     savename = 'mapped_' + os.path.basename(list_files[i])
     json_filename = filename.with_suffix('.json')
     classify(df_select, savename, json_filename)
 
+os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Text_output')
+with open('output.txt', 'w', encoding='utf-8') as f:
+    for line in output:
+        f.write(line)
+        f.write('\n')
 

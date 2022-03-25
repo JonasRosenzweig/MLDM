@@ -240,7 +240,10 @@ def classify(df, save_name, json_name):
             Predictions.append(multiple_predictions)
             Maj_Pred.append(column_predictions_count.index[0])
             Certainty.append(multiple_certainties)
-    print_and_save('map list: {f}'.format(f=predictions_map))
+    # fix so we remove duplicates inside list of maps
+    predictions_map_no_duplicates = []
+    [predictions_map_no_duplicates.append(x) for x in predictions_map if x not in predictions_map_no_duplicates]
+    print_and_save('map list: {f}'.format(f=predictions_map_no_duplicates))
     json_map = {"Columns": []}
     json_pred_cert = {}
 
@@ -278,6 +281,8 @@ def classify(df, save_name, json_name):
     df_prices = df_renamed.filter(like='UNIT_PRICE')
     df_colors = df_renamed.filter(like='COLOR')
     df_colors = df_colors.replace('\d+', '', regex=True)
+    df_colors = df_colors.replace('/', '', regex=True)
+    df_colors = df_colors.replace(r'\'', '', regex=True)
     for column in df_colors:
         try:
             if pd.to_numeric(df_colors[column], errors='coerce').notnull().all():
@@ -314,11 +319,10 @@ def classify(df, save_name, json_name):
         pass
     try:
         del df_renamed['UNIT_PRICE']
-        del df_renamed['COLOR']
     except KeyError:
         pass
     try:
-        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices, df_colors], axis=1, join='inner')
+        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices], axis=1, join='inner')
     except UnboundLocalError:
         pass
     try:
@@ -331,6 +335,11 @@ def classify(df, save_name, json_name):
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.COLOR, sep=', Color: ')
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.SIZE, sep=', Size ')
     except AttributeError:
+        pass
+    try:
+        del df_renamed['COLOR']
+        del df_renamed['SIZE']
+    except KeyError:
         pass
 
     print(df_renamed.head())

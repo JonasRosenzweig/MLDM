@@ -44,6 +44,9 @@ colors_dict = {'Colors': colors}
 df_colors = pd.DataFrame(data=colors_dict)
 for column in df_colors:
     df_colors[column] = df_colors[column].str.replace('\d+', '')
+    df_colors[column] = df_colors[column].str.replace('/', ' ')
+    df_colors[column] = df_colors[column].str.replace(r'\'', ' ')
+
 print('-------test 3-------:')
 print(df_colors.head())
 
@@ -116,9 +119,8 @@ def find_largest_sum(df):
 
 
 
-
-
 # compare sum of two columns of numbers
-
+# def df_test:
+#   df.astype(float)
 
 # implement changes in Classify.py

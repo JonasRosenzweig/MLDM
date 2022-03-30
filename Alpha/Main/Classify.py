@@ -1,25 +1,50 @@
 import os
+# os functions - save directory, recent file lookup
+
 import pickle
+# to load the tokenizer
+
 import keras
+#  for model loading
+
 import json
+# for output of classification map in json
+
 import glob
+# for path directory enum
+
 from stdnum import ean
+#  for EAN check validation
 
 import pandas as pd
+# for loading the data feed .csv into a pandas DataFrame
+
 import numpy as np
+# for argmax call in predictClass method
 
 from pathlib import Path
-from sklearn.preprocessing import LabelEncoder
+# for path directory finding
+
 from keras.preprocessing import sequence
+# for sequence padding of data
+
+from sklearn.preprocessing import LabelEncoder
+# to encode and decode the target labels
+
 
 # Constants
 THRESHOLD = 0.51
+# used for mapping entire column to the class whose percentage of mapped data is over the threshold
 SAMPLE_AMOUNT = 10
+# number of data points sampled for classification - 10 is used for testing, in practice at least 100 should be used
 RANDOM_STATE = 7
+# set random state for reproducibility
 TARGETS = ['OTHER', 'NAME', 'UNIT_PRICE', 'SIZE', 'COLOR']
+# targets for the model predictions
 uploads_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds\*.csv'
+# product data feeds directory
 
-# lists for custom rules classification
+# lists for custom rules - partial match
 NAME_Headers = ['Style Name', 'Article Name', 'ïṠṡNavn']
 OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','%', 'Color Number',
                  'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Fit','lukning',
@@ -36,6 +61,7 @@ PRICE_Headers = ['price','Price','Cost','VAT','Retail','Subtotal','Sub total','t
 COLOR_Headers = ['Colour name', 'Color name', 'Color Name', 'Colour Name', 'color name', 'Color', 'Farve beskrivelse']
 SIZE_Headers = ['MÅL', 'Size', 'size', 'Størrelse', 'størrelse', 'mål', 'Mål','StÃẁrrelse']
 EAN_Headers = ['Barcode']
+# list for custom rules - exact match
 Exact_OTHER_Headers = ['brand', 'width_mm', 'hs_code', 'country_of_origin', 'description', 'Style nr.',
                        'Marketing Text (ENU)', 'Marketing Text (DAN)', 'Dess.', 'Collection', 'Country of Ori.',
                        'Compos.', 'Brand', 'Per Case', 'Dessin', 'Currency', 'Del. week', 'Material', 'Origin',
@@ -48,13 +74,17 @@ Exact_SIZE_Headers = ['Dimensions']
 Exact_COLOR_Headers = ['Col. Descrip.', 'Colour', 'Col.text', 'Farve_1']
 Exact_PRICE_Headers = ['Rek SKR Ex Moms', 'Veil NKR', 'M.S.R.P (EUR)', 'WHS DKK', 'WHS EUR', 'WHS NOK', 'WHS SEK',
                        'WHS USD', 'WHSP', 'Vejl DKK', 'Vejl NOK', 'Vejl SEK', 'MSRP EUR', 'R.R.P. DKK']
-output = []
 
+# empty list for text output
+output = []
+# for terminal output to text file
 def print_and_save(s):
     print(s)
     output.append(s)
 
+# used to fix output
 replace_strings = ['DKK', 'SEK', 'NOK', 'USD', 'EUR', 'GBP', ',', 'ïṠṡ']
+
 # list files in directory
 list_files = glob.glob(uploads_path)
 
@@ -86,11 +116,16 @@ le = LabelEncoder()
 # tokenizes text, performs predictions on it, trains labelencoder, returns class prediction
 def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
+    # transform input data (text) to a tokenized sequence padded to 300 in length
     predict_x = model.predict(text_pad)
+    # apply model to tokenized text
     predict_class = np.argmax(predict_x, axis=1)
+    # predicted class is the maximum of the prediction
     score = le.inverse_transform(predict_class)
+    # inverse transform of label encoder of targets to the predicted class
     prediction = score[0]
     return prediction
+    # return class prediction
 
 # check if substring in list
 def Substring_match(match_list, string):
@@ -104,10 +139,14 @@ def String_match(match_list, string):
         if item == string:
             return True
 
+# remove punctuation
 def remove_punct(string):
     string = string.replace(",", "")
     return string
 
+# attempt at fixing wrong encoding  (wrong encoding happens when the .csv is encoded using different encoding protocols)
+# UTF-8 is the correct standard for northern europe - wrong decoding happens when the .csv is encoded using
+# other formats than UTF-8
 def fix_encoding(df):
     df.replace('Ãẁ', 'ø', inplace=True, regex=True)
     df.replace('ÃḊ', 'æ', inplace=True, regex=True)
@@ -119,6 +158,7 @@ def fix_encoding(df):
 # load csv into df
 df_recent = read_csv(recent_upload)
 
+# main method - classifies every data point and column in the loaded df (DataFrame)
 def classify(df, save_name, json_name):
     global retail_prices, cost_prices
     map_list = []
@@ -135,7 +175,7 @@ def classify(df, save_name, json_name):
         try:
             df_sampled = df.sample(SAMPLE_AMOUNT,  random_state=RANDOM_STATE)
         except ValueError:
-            pass
+            df_sampled = df
     df_sampled = df_sampled.reset_index(drop=True)
 
     # column headers list
@@ -153,6 +193,7 @@ def classify(df, save_name, json_name):
         print_and_save('-----------Mapping column {num} of {len}-----------'
               .format(num=n+1, len=len(column_headers)))
         df_select = df_sampled[column_headers[n]]
+        #
         df_select = df_select.astype(str)
         fix_encoding(df_select)
 
@@ -280,9 +321,10 @@ def classify(df, save_name, json_name):
 
     df_prices = df_renamed.filter(like='UNIT_PRICE')
     df_colors = df_renamed.filter(like='COLOR')
+    df_colors = df_colors.astype(str)
     df_colors = df_colors.replace('\d+', '', regex=True)
-    df_colors = df_colors.replace('/', '', regex=True)
-    df_colors = df_colors.replace(r'\'', '', regex=True)
+    df_colors = df_colors.replace('/', ' ')
+    df_colors = df_colors.replace(r'\'', ' ')
     for column in df_colors:
         try:
             if pd.to_numeric(df_colors[column], errors='coerce').notnull().all():

@@ -193,50 +193,63 @@ def classify(df, save_name, json_name):
         print_and_save('-----------Mapping column {num} of {len}-----------'
               .format(num=n+1, len=len(column_headers)))
         df_select = df_sampled[column_headers[n]]
-        #
+        # select column
         df_select = df_select.astype(str)
+        # standardize data type to str
         fix_encoding(df_select)
+        # attempt to fix wrongly decoded data
 
         for item in replace_strings:
             df_select = df_select.replace(item, '')
 
         for m in range(len(df_select)):
+            # if /elif statements for custom rules and model classification
             targets = TARGETS
             target = le.fit_transform(targets)
             data = df_select[m]
             if Substring_match(OTHER_Headers, column_headers[n] or len(data) > 200)\
                     or String_match(Exact_OTHER_Headers, column_headers[n]) or data == '0':
+                # Custom rule for 'OTHER' Class
                 predicted_class = 'OTHER'
                 print('Custom rule applied - OTHER')
             elif Substring_match(COLOR_Headers, column_headers[n]) \
                     or String_match(Exact_COLOR_Headers, column_headers[n]):
+                # Custom rule for 'COLOR' Class
                 predicted_class = 'COLOR'
                 print('Custom rule applied - COLOR')
             elif Substring_match(PRICE_Headers, column_headers[n]) \
                     or String_match(Exact_PRICE_Headers, column_headers[n]):
+                # Custom rule for 'PRICE' Class
                 predicted_class = 'UNIT_PRICE'
                 print('Custom rule applied - PRICE')
             elif Substring_match(SIZE_Headers, column_headers[n]) \
                     or String_match(Exact_SIZE_Headers, column_headers[n]):
+                # Custom rule for 'SIZE' Class
                 predicted_class = 'SIZE'
                 print('Custom rule applied - SIZE')
             elif Substring_match(EAN_Headers, column_headers[n]):
+                # Custom rule for 'EAN' Class
                 predicted_class = 'PROD_BARCODE_NUMBER'
                 print('Custom rule applied - EAN')
             elif Substring_match(NAME_Headers, column_headers[n]) \
                     or String_match(Exact_NAME_Headers, column_headers[n]):
+                # Custom rule for 'NAME' class
                 predicted_class = 'PROD_NAME'
                 print('Custom rule applied - NAME')
             elif validate_ean(data):
+                # EAN validator
                 predicted_class = 'PROD_BARCODE_NUMBER'
                 print('EAN Validator applied')
-            elif data == 'nan' or data == '0' or data == 0:
+            elif data == 'nan' or data == '0' or data == 0 or data == '0':
                 predicted_class = 'NAN'
             elif predictClass(data, tokenizer, model) == 'NAME':
+                # model prediction for Name
                 predicted_class = 'PROD_NAME'
+                # output PROD_NAME instead of "NAME" - for DanDomain data upload standards
                 print_and_save('Model Prediction: {f}'.format(f=predicted_class))
             else:
                 predicted_class = predictClass(data, tokenizer, model)
+                # model prediction if no custom rules are relevant
                 print_and_save('Model Prediction: {f}'.format(f=predicted_class))
             predictions_map[n].append(predicted_class)
             predictions_only[n].append(predicted_class)
@@ -255,6 +268,8 @@ def classify(df, save_name, json_name):
         print_and_save('____________________________')
 
         if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
+            # if there is a majority class, i.e if the highest prediction count is greater than
+            # the size of the column times the threshold
             print_and_save('{f} is the majority prediction.'.format(f=column_predictions_count.index[0]))
             print_and_save('The majority class is: {pred} with {num_pred} of {len} predictions.'
                   '\n Original Class: {original}'
@@ -267,6 +282,8 @@ def classify(df, save_name, json_name):
             Certainty.append(100)
 
         else:
+            # if there is no majority class, i.e the highest prediction count is lower than the size of the column
+            # times the threshold
             print_and_save('There is no majority class'
                   '\n Original class: {original}'
                   .format(original=column_headers[n]))
@@ -288,6 +305,7 @@ def classify(df, save_name, json_name):
     json_map = {"Columns": []}
     json_pred_cert = {}
 
+    # loop for json output of classification map, per json standard for ADM
     for i in range(len(column_headers)):
         json_map["Columns"].append({"Original Class {i}".format(i=i+1): column_headers[i],
                                     "Model Prediction(s)": []})
@@ -320,19 +338,25 @@ def classify(df, save_name, json_name):
     df_renamed.columns = Maj_Pred
 
     df_prices = df_renamed.filter(like='UNIT_PRICE')
+    # select price columns from df_renamed and load into df_prices
     df_colors = df_renamed.filter(like='COLOR')
+    # select color column from df_renamed and load into df_colors
     df_colors = df_colors.astype(str)
     df_colors = df_colors.replace('\d+', '', regex=True)
     df_colors = df_colors.replace('/', ' ')
     df_colors = df_colors.replace(r'\'', ' ')
+
     for column in df_colors:
         try:
             if pd.to_numeric(df_colors[column], errors='coerce').notnull().all():
+                # if df_colors is entirely numerical, delete the column
+                # sometimes custom rules lead to color_numbers being labelled as numbers
                 del df_colors[column]
         except TypeError:
             pass
     try:
         df_prices = df_prices.astype(float)
+        # prices need to be of float type for DanDomain data standards to represent decimals correctly
     except ValueError:
         pass
     prices = []
@@ -343,6 +367,7 @@ def classify(df, save_name, json_name):
         except IndexError:
             pass
     for i in range(len(df_prices)):
+        # code for finding highest price column - needs fixing
         try:
             if prices[0][0] < prices[i+1][0]:
                 cost_prices = prices[0]
@@ -364,35 +389,44 @@ def classify(df, save_name, json_name):
     except KeyError:
         pass
     try:
-        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices], axis=1, join='inner')
+        df_renamed = pd.concat([df_renamed, df_cost_prices, df_retail_prices], axis=1, join='inner')\
+        # combine prices and retail prices after diferentiation to main df
     except UnboundLocalError:
         pass
     try:
         del df_renamed['OTHER']
+        # delete irrelevant data based on other or nan classification
         del df_renamed['NAN']
     except KeyError:
         pass
     df_renamed = df_renamed.loc[:,~df_renamed.columns.duplicated()]
+    # remove duplicate columns
     try:
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.COLOR, sep=', Color: ')
+        # concatenate color to prod name
         df_renamed['PROD_NAME'] = df_renamed.PROD_NAME.str.cat(df_renamed.SIZE, sep=', Size ')
+        # concatenate size to prod name
     except AttributeError:
         pass
     try:
         del df_renamed['COLOR']
         del df_renamed['SIZE']
+        # delete unused columns after concatenation
     except KeyError:
         pass
 
     print(df_renamed.head())
     Multi_Header1 = ['PRODUCTS']
+    # multi header first line for DanDomain data upload standard
     for y in range(len(df_renamed.columns)-1):
         Multi_Header1.append('')
     df_renamed.columns = pd.MultiIndex.from_arrays([Multi_Header1, df_renamed.columns])
     print(df_renamed.head())
     os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Output')
     df_renamed.to_csv(mapped_filename, index=False)
+    # save .csv
 
+# classify and save output for every file in directory
 for i in range(len(list_files)):
     print_and_save('Classifyng File: {f}'.format(f=list_files[i]))
     df_select = read_csv(list_files[i])
@@ -401,6 +435,7 @@ for i in range(len(list_files)):
     json_filename = filename.with_suffix('.json')
     classify(df_select, savename, json_filename)
 
+# save terminal output as text file
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Text_output')
 with open('output.txt', 'w', encoding='utf-8') as f:
     for line in output:

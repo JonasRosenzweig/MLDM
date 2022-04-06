@@ -62,13 +62,19 @@ tokenizer = pickle.load(open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\or
 le = LabelEncoder()
 print('Model, Tokenizer and LabelEncoder loaded.')
 
-
+# prediction function using trained keras model and tokenzer
+# tokenizes text, performs predictions on it, trains labelencoder, returns class prediction
 def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
+    # transform input data (text) to a tokenized sequence padded to 300 in length
     predict_x = model.predict(text_pad)
+    # apply model to tokenized text
     predict_class = np.argmax(predict_x, axis=1)
+    # predicted class is the maximum of the prediction
     score = le.inverse_transform(predict_class)
+    # inverse transform of label encoder of targets to the predicted class
     return score[0]
+    # return class prediction
 
 
 col_dict = {df.columns.get_loc(c): c for idx, c in enumerate(df.columns)}
@@ -99,7 +105,9 @@ for n in (range(len(col_dict))):
     predicted_classes = pd.Series(lists[n])
     predicted_count = pd.Series(predicted_classes.value_counts())
     print('_____________________________')
-    if predicted_count.iloc[0] > (len(df_select)) * threshold:
+    if predicted_count.iloc[0] > (len(df_select)) * threshold: \
+        # if there is a majority class, i.e if the highest prediction count is greater than
+        # the size of the column times the threshold
         print(predicted_count.index[0], 'is the Majority Predicted Class.')
         print('Majority Predicted classes:', predicted_count.index[0], ', predictions:', predicted_count.iloc[0],
               '/', len(df_select))
@@ -113,6 +121,8 @@ for n in (range(len(col_dict))):
 
 
     else:
+        # if there is no majority class, i.e the highest prediction count is lower than the size of the column
+        # times the threshold
         print(predicted_count)
         print('There is no Majority Predicted Class above the threshold.')
         for i in range(len(predicted_count) - 2):

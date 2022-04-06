@@ -1,3 +1,6 @@
+### Current Development Column Mapper / Clasifier ###
+# not yet refactored for ADM deployment
+
 import os
 # os functions - save directory, recent file lookup
 import pickle
@@ -33,6 +36,12 @@ TARGETS = ['OTHER', 'NAME', 'UNIT_PRICE', 'SIZE', 'COLOR']
 # targets for the model predictions
 uploads_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds\*.csv'
 # product data feeds directory
+maps_path = r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps'
+# output directory for maps
+demo_output = r'C:\Users\mail\PycharmProjects\MLDM\Demo_Output'
+# output directory for saved .csv mapped files
+demo_text_output = r'C:\Users\mail\PycharmProjects\MLDM\Demo_Text_output'
+# output directory for terminal output text file
 
 # lists for custom rules - partial match
 NAME_Headers = ['Style Name', 'Article Name', 'ïṠṡNavn']
@@ -83,8 +92,9 @@ recent_upload = max(list_files, key=os.path.getctime)
 
 # read csv params
 def read_csv(path):
-    return pd.read_csv(path, error_bad_lines=False, engine='c', encoding='UTF-8',
+    df = pd.read_csv(path, error_bad_lines=False, engine='c', encoding='UTF-8',
                        low_memory=False, dtype=str)
+    return df
 
 # EAN validator
 def validate_ean(string):
@@ -102,7 +112,7 @@ model = keras.models.load_model(Model_path)
 tokenizer = pickle.load(open(Tokenizer_path, 'rb'))
 le = LabelEncoder()
 
-# prediction function using trained keras model and tokenzer
+# prediction function using trained keras model and tokenizer
 # tokenizes text, performs predictions on it, trains labelencoder, returns class prediction
 def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
@@ -309,7 +319,7 @@ def classify(df, save_name, json_name):
     json_map = json.dumps(json_map)
 
 
-    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\Maps')
+    os.chdir(maps_path)
     #filename = Path(os.path.basename(recent_upload))
     mapped_filename = 'mapped_'+ os.path.basename(filename)
     #json_filename = filename.with_suffix('.json')
@@ -412,7 +422,7 @@ def classify(df, save_name, json_name):
         Multi_Header1.append('')
     df_renamed.columns = pd.MultiIndex.from_arrays([Multi_Header1, df_renamed.columns])
     print(df_renamed.head())
-    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Output')
+    os.chdir(demo_output)
     df_renamed.to_csv(mapped_filename, index=False)
     # save .csv
 
@@ -425,8 +435,8 @@ for i in range(len(list_files)):
     json_filename = filename.with_suffix('.json')
     classify(df_select, savename, json_filename)
 
-# save terminal output as text file
-os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Text_output')
+# save terminal output as text file - for evaluation and bug fixing
+os.chdir(demo_text_output)
 with open('output.txt', 'w', encoding='utf-8') as f:
     for line in output:
         f.write(line)

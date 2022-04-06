@@ -1,3 +1,4 @@
+### Old data transformation script for early DanDomain classifier MVP ###
 # Concatenates all .csv files from dir into one .csv
 import os
 

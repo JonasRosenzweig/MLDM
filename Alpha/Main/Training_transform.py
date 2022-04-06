@@ -2,11 +2,17 @@
 
 # packages
 import os
+# os functions - save directory, recent file lookup
 import pandas as pd
+# for loading the data feed .csv into a pandas DataFrame
 from os import listdir
+# for path directory finding
 from sklearn.model_selection import train_test_split
+# for splitting of test/train datasets for training and validation
 from imblearn.over_sampling import RandomOverSampler
+# for oversampled training dataset
 from imblearn.under_sampling import RandomUnderSampler
+# for undersampled training dataset
 
 # takes a string and removes punctuation and fixed danish encoding errors
 def remove_punct(string):

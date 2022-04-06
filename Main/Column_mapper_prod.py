@@ -1,16 +1,32 @@
+### Current Column Mapper script deployed to ADM server ###
+# ADM paths commented out and replaced with local machine paths
+
 import os
-import pandas as pd
+# os functions - save directory, recent file lookup
 import pickle
+# to load the tokenizer
 import keras
-from sklearn.preprocessing import LabelEncoder
-from keras.preprocessing import sequence
+#  for model loading
 import numpy as np
+# for argmax call in predictClass method
+import pandas as pd
+# for loading the data feed .csv into a pandas DataFrame
+from sklearn.preprocessing import LabelEncoder
+# to encode and decode the target labels
+from keras.preprocessing import sequence
+# for sequence padding of data
 import json
+# for json output
 from pathlib import Path
 import glob
+# for path directory
 
+# Constants
 threshold = 0.51
+# used for mapping entire column to the class whose percentage of mapped data is over the threshold
 sample_amount = 10
+# number of data points sampled for classification - 10 is used for testing, in practice at least 100 should be used
+
 
 PATH2 = r'C:\Users\mail\Downloads\data\test\*.csv'
 list_files2 = glob.glob(PATH2)

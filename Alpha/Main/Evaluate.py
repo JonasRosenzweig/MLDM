@@ -1,20 +1,29 @@
+### Main Evaluate script - compares model predictons to known maps and outputs results ###
+
 import os
+# os functions - save directory, recent file lookup
 import pickle
+# to load the tokenizer
 import keras
-
+#  for model loading
 import numpy as np
+# for argmax call in predictClass method
 import pandas as pd
-
+# for loading the data feed .csv into a pandas DataFrame
 from os import listdir
+# for path directory
 from sklearn.preprocessing import LabelEncoder
+# to encode and decode the target labels
 from keras.preprocessing import sequence
-
+# for sequence padding of data
 from stdnum import ean
+#  for EAN check validation
 
+# read_csv method to change encoding params for global use
 def read_csv(df):
     return pd.read_csv(df, error_bad_lines=False, engine='c', encoding='ISO-8859-14', low_memory=False, dtype=str)
 
-# EAN Validator
+# EAN Validator method
 def validate_EAN(string):
     try:
         ean.validate(string)
@@ -26,25 +35,34 @@ def validate_EAN(string):
 def remove_duplicates(l):
     return list(dict.fromkeys(l))
 
+# paths for model and tokenizer
 Model_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Main\Trained Models\OTHER_NAME_PRICE_SIZE_COLOR_OVER_WORDEMB.h5'
 Tokenizer_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Main\Trained Models\OTHER_NAME_PRICE_SIZE_COLOR_OVER_WORDEMB.pkl'
 
+# header and target paths for evaluation
 Mapped_Headers_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Manual maps\Headers.csv'
 Mapped_Targets_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Manual maps\Targets.csv'
 
+# load headers and targets into pandas dataframes
 Mapped_Headers_df = read_csv(Mapped_Headers_path)
 Mapped_Targets_df = read_csv(Mapped_Targets_path)
 
+# lists of targets and headers for evaluation
 Mapped_Targets_list = Mapped_Targets_df.values.tolist()
 Mapped_Headers_list = Mapped_Headers_df.values.tolist()
 
+# same lists, removing nan str values
 Mapped_Targets_list = [[x for x in y if str(x) != 'nan'] for y in Mapped_Targets_list]
 Mapped_Headers_list = [[x for x in y if str(x) != 'nan'] for y in Mapped_Headers_list]
 
+# datafeed path
 EVAL_path = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds'
 list_files = listdir(EVAL_path)
 
+# targets list for model
 TARGETS = ['OTHER', 'NAME', 'PRICE', 'SIZE', 'COLOR']
+
+# Manual Map lists and features
 OTHER_list, EAN_list, PRICE_list, NAME_list, COLOR_list, SIZE_list = [], [], [], [], [],[]
 Features_lists = [OTHER_list, EAN_list, PRICE_list, NAME_list, COLOR_list, SIZE_list]
 
@@ -69,7 +87,7 @@ def Substring_match(match_list, string):
         if match_list[y] in string:
             return True
 
-
+# create list of lists (Headers_Rule_List) from individual header map lists
 for i in range(len(Mapped_Targets_list)):
     for j in range(len(Mapped_Targets_list[i])):
         if (Mapped_Targets_list[i][j]) == 'OTHER':
@@ -85,6 +103,7 @@ for i in range(len(Mapped_Targets_list)):
         if (Mapped_Targets_list[i][j]) == 'SIZE':
             SIZE_list.append(Mapped_Headers_list[i][j])
 
+# remove duplicates from features lists
 for i in range(len(Features_lists)):
     Features_lists[i] = remove_duplicates(Features_lists[i])
 

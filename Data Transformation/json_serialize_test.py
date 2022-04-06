@@ -1,3 +1,5 @@
+### Test file for json serialization - correct output for ADM json parsing specifications ###
+
 Columns = ["Dessin", "Quality", "Colour"]
 Predictions = ["EAN", "EAN", ["EAN", "Price"]]
 Certainty = [100, 100, [62, 38]]

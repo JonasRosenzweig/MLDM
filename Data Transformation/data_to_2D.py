@@ -1,4 +1,4 @@
-# transforms data into 2 column .csv: 'Data' and 'Header" for training
+### Transforms data into 2 column .csv: 'Data' and 'Header" for training ###
 # gets rid of rows with NAN fields
 
 import os

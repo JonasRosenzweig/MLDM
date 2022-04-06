@@ -1,24 +1,41 @@
+### Column Mapper (Classify.py - refactor for ADM / Digital Ocean) ###
+
+# packages
 import os
+# os functions - save directory, recent file lookup
 import pickle
+# to load the tokenizer
 import keras
+#  for model loading
 import json
+# for output of classification map in json
 import glob
-
+# for path directory enum
 import pandas as pd
+# for loading the data feed .csv into a pandas DataFrame
 import numpy as np
-
+# for argmax call in predictClass method
 from pathlib import Path
-from sklearn.preprocessing import LabelEncoder
+# for path directory finding
 from keras.preprocessing import sequence
+# for sequence padding of data
+from sklearn.preprocessing import LabelEncoder
+# to encode and decode the target labels
 
-
+# Constants
 THRESHOLD = 0.51
+# used for mapping entire column to the class whose percentage of mapped data is over the threshold
 SAMPLE_AMOUNT = 10
+# number of data points sampled for classification - 10 is used for testing, in practice at least 100 should be used
 RANDOM_STATE = 7
+# set random state for reproducibility
 TARGETS = ['Name', 'Description', 'Category', 'Price', 'Amount', 'EAN']
-
+# targets for the model predictions
 uploads_path = r'C:\Users\mail\Downloads\data\reformat_test\*.csv'
+# product data feeds directory
 #uploads_path = r'/var/www/html/ADM/public/temp'
+# product data feeds directory - ADM digitalOcean dir
+
 
 # list files in directory
 list_files = glob.glob(uploads_path)
@@ -70,27 +87,39 @@ predictions_map = list(map(lambda item: [item], column_headers))
 # list of list of predictions only - populate now then popped later
 predictions_only = list(map(lambda item: [item], column_headers))
 
+# list initializations - map_list: mapped headers after mapping
 map_list = []
+# maps_object: mapped headers after mapping for json object
 maps_object = []
+# List of predictions (ends up being a list of lists - includes Prediction or list of
+# predictions if there are multiple)
 Predictions = []
+# List of Certainties (ends up being a list of lists - includes Certainties or list of
+# Certainties if there are multiple) - Certainty determined by percentage of classification
+# per target of a single header
 Certainty = []
 
-
+# for column in column headers
 for n in range(len(column_headers)):
     print('----------Mapping column {num} of {len}----------'
           .format(num=n+1, len=len(column_headers)))
+    # df_select: load selected column into separate dataframe
     df_select = df[column_headers[n]]
     # sequence padding and tokenization of data requires string type
     df_select = df_select.astype(str)
     multiple_predictions = []
     multiple_certainties = []
+    # for data in selected column
     for m in range(len(df_select)):
         class_predictions = []
         targets = TARGETS
         # fitting targets for label encoder
         targets = le.fit_transform(targets)
+        # select individual data point
         data = df_select[m]
+        # model prediction on each data point
         predicted_class = predictClass(data, tokenizer, model)
+        # append prediction to list objects for output and json output
         predictions_map[n].append(predicted_class)
         predictions_only[n].append(predicted_class)
         print('Data: {data}, Class Prediction: {prediction}'
@@ -109,6 +138,7 @@ for n in range(len(column_headers)):
     print('number of predictions:', column_predictions_count.iloc[0])
     print('________________________')
 
+    # threshold logic for majority class
     if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
         print(column_predictions_count.index[0], 'is the Majority Predicted Class.')
         print('The majority class is: {pred}; {num_pred} of {len} predictions.'
@@ -119,7 +149,7 @@ for n in range(len(column_headers)):
                       origin=column_headers[n]))
         Predictions.append(column_predictions_count.index[0])
         Certainty.append(100)
-
+    # else threshold logic for no majority class
     else:
         print('There is no Majority Predicted Class above the threshold.'
               '\n Original Class: {origin}'
@@ -139,6 +169,8 @@ for n in range(len(column_headers)):
 json_map = {"Columns": []}
 json_pred_cert = {}
 
+# json map output per ADM specifications: outputs correctly formatted json object for parsing
+# on ADM
 for i in range(len(column_headers)):
     json_map["Columns"].append({"Original Class {i}".format(i=i+1): column_headers[i],
                                 "Model Prediction(s)": []})

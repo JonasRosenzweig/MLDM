@@ -1,33 +1,23 @@
 import os
 # os functions - save directory, recent file lookup
-
 import pickle
 # to load the tokenizer
-
 import keras
 #  for model loading
-
 import json
 # for output of classification map in json
-
 import glob
 # for path directory enum
-
 from stdnum import ean
 #  for EAN check validation
-
 import pandas as pd
 # for loading the data feed .csv into a pandas DataFrame
-
 import numpy as np
 # for argmax call in predictClass method
-
 from pathlib import Path
 # for path directory finding
-
 from keras.preprocessing import sequence
 # for sequence padding of data
-
 from sklearn.preprocessing import LabelEncoder
 # to encode and decode the target labels
 

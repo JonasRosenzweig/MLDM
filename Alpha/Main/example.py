@@ -2,7 +2,7 @@
 from pathlib import Path
 import os
 import glob
-import Classify
+from Alpha.Main import Classify
 
 # directory of data feeds to classify
 directory = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Product Data feeds\*.csv'

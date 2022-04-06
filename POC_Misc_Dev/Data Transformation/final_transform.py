@@ -11,7 +11,7 @@ classes_series = pd.Series(classes, index=df.columns)
 df = df.append(classes_series, ignore_index=True)
 df.to_csv('test1.csv', index=False)
 
-PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
+PATH = r'/Data/Raw Data'
 list_files = listdir(PATH)
 
 data_list = []
@@ -20,7 +20,7 @@ for j in range(len(list_files)):
     print(i + len(list_files), 'of', (len(list_files)), "files remaining.")
     dataset_filename = os.listdir(PATH)[j]
     print(dataset_filename)
-    dataset_path = os.path.join("../..", PATH, dataset_filename)
+    dataset_path = os.path.join("../../..", PATH, dataset_filename)
     data = pd.read_csv(dataset_path, error_bad_lines=False, engine='c', encoding="UTF-8", low_memory=False,
                        skiprows=1)
     data = data[['PROD_NAME', 'PROD_NUM', 'UNIT_PRICE']]

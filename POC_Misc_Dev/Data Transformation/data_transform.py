@@ -16,7 +16,7 @@ i = 0
 for j in range(len(files)):
     print(i + len(files),  'of', (len(files)), "files remaining.")
     dataset_filename = os.listdir(DATAPATH)[j]
-    dataset_path = os.path.join("..", DATAPATH, dataset_filename)
+    dataset_path = os.path.join("../..", DATAPATH, dataset_filename)
     data = pd.read_csv(dataset_path)
     i -= 1
     df_list.append(data)

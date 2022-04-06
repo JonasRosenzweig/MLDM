@@ -3,7 +3,7 @@
 import os
 import pandas as pd
 
-PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\MVP'
+PATH = r'/Data/MVP'
 CSV = '6_class_MVP_dataset_v3_unknowns.csv'
 TEST = os.path.join(PATH, CSV)
 df = pd.read_csv(TEST, error_bad_lines=False, engine='c', encoding='ISO-8859-15', low_memory=False)
@@ -22,5 +22,5 @@ for i in range(len(df_cols)):
 df_reduced = pd.DataFrame(df_list)
 df_reduced = df_reduced.T
 df_reduced.head(1087)
-os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\MVP')
+os.chdir(r'/Data/MVP')
 df_reduced.to_csv('6_class_MVP_dataset_v3_unknowns_no_duplicates.csv', index=False)

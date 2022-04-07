@@ -54,7 +54,7 @@ URL_REGEX = '[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+
 IMAGE_REGEX = '([0-9a-zA-Z\._-]+.(png|PNG|gif|GIF|jp[e]?g|JP[E]?G))'
 INTEGER_REGEX = '(^\d{1,4}$)'
 
-# Keras models
+# Keras models - have not been commited to github as they take up too much space
 model_4 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\4ClassSimple.h5')
 model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\3ClassSimpleNumID.h5')
 model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\5ClassSimpleNumID.h5')

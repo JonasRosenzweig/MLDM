@@ -1,4 +1,5 @@
 ### Full data transformation - all functions ###
+# used for data transformation and cleaning for training
 
 # packages
 import os
@@ -41,8 +42,8 @@ def df_to_2D(df):
 def csv_to_df(path, j):
     dataset_filename = os.listdir(path)[j]
     dataset_path = os.path.join("../..", path, dataset_filename)
-    df = pd.read_csv(dataset_path, error_bad_lines=False, engine='c', encoding='UTF-8',
-                     low_memory=False)
+    df = pd.read_csv(dataset_path, error_bad_lines=False, engine='c', encoding='ISO-8859-14',
+                     low_memory=False, lineterminator='\n')
     return df, dataset_filename
 
 # takes a directory of .csv files, a savepath, a test/train ratio and a save boolean
@@ -111,6 +112,7 @@ SAVEPATH = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Training Da
 OVERPATH = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Training Data\Oversampled'
 UNDERPATH = r'C:\Users\mail\PycharmProjects\MLDM\Alpha\Organized Data\Training Data\Undersampled'
 
-#split_train_2D(PATH, SAVEPATH, 0.2, True)
-#oversample(PATH, OVERPATH, 0.2, True)
-#ndersample(PATH, UNDERPATH, 0.2, True)
+# tests
+split_train_2D(PATH, SAVEPATH, 0.2, True)
+oversample(PATH, OVERPATH, 0.2, True)
+undersample(PATH, UNDERPATH, 0.2, True)

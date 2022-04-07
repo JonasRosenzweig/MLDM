@@ -1,4 +1,6 @@
 ### Column Mapper (Classify.py - refactor for ADM / Digital Ocean) ###
+# ADM paths commented out and replaced with local machine paths
+# refactored to remove col_dict enum for df.columns list (See Column_mapper_prod.py)
 
 # packages
 import os
@@ -69,11 +71,15 @@ le = LabelEncoder()
 # function to make predictions
 def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
+    # transform input data (text) to a tokenized sequence padded to 300 in length
     predict_x = model.predict(text_pad)
+    # apply model to tokenized text
     predict_class = np.argmax(predict_x, axis=1)
-    #print('score:', predict_x)
-    #print('argmax:', predict_class)
+    # predicted class is the maximum of the prediction
+    #print('score:', predict_x) # print statements for argmax testing
+    #print('argmax:', predict_class) # print statements for argmax testing
     score = le.inverse_transform(predict_class)
+    # inverse transform of label encoder of targets to the predicted class
     prediction = score[0]
     return prediction
 

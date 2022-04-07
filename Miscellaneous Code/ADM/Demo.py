@@ -1,9 +1,9 @@
+### Outdated Demo Classifier - only includes NAME/PROD_NUM/OTHER classifications ###
 
 import re
 import os
 import pickle
 import keras
-import statistics
 
 import numpy as np
 import pandas as pd
@@ -28,9 +28,9 @@ EAN_REGEX = '(?<=\s)\d{13}(?=\s)'
 
 
 MODEL_DIR = \
-    r'/Data/Final/NAME_NUM_OTHER_Oversampled/models/NAME_NUM_OTHER_OVER_WORDEMB.h5'
+    r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.h5'
 TOKENIZER_DIR = \
-    r'/Data/Final/NAME_NUM_OTHER_Oversampled/models/NAME_NUM_OTHER_OVER_WORDEMB.pkl'
+    r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.pkl'
 
 THRESHOLD = 0.51
 SAMPLE_AMOUNT = 10

@@ -78,9 +78,17 @@ def predictClass(text, tok, model):
 
 
 col_dict = {df.columns.get_loc(c): c for idx, c in enumerate(df.columns)}
+
+# list initializations - map_list: mapped headers after mapping
 map_list = []
+# maps_object: mapped headers after mapping for json object
 maps_object = []
+# List of predictions (ends up being a list of lists - includes Prediction or list of
+# predictions if there are multiple)
 Predictions = []
+# List of Certainties (ends up being a list of lists - includes Certainties or list of
+# Certainties if there are multiple) - Certainty determined by percentage of classification
+# per target of a single header
 Certainty = []
 
 lists = list(map(list, col_dict.items()))
@@ -147,10 +155,13 @@ for n in (range(len(col_dict))):
 print('Predictions:', Predictions)
 print('Certainty:', Certainty)
 
+# Transform lists into JSON serializable output
 json_map = {"Columns": []}
 json_pred_cert = {}
 print(json_map)
 
+# json map output per ADM specifications: outputs correctly formatted json object for parsing
+# on ADM
 for i in range(len(Columns)):
     json_map["Columns"].append({"Original Class {i}".format(i=i+1): Columns[i],
                                 "Model Prediction(s)": []})

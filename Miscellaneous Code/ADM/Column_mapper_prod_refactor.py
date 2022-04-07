@@ -125,10 +125,14 @@ for n in range(len(column_headers)):
         print('Data: {data}, Class Prediction: {prediction}'
               .format(data=data, prediction=predicted_class))
 
+    # predictions_only is built from the column headers, so predictions_only[n][0] is simply the original header
+    # .pop(0) removes this
     predictions_only[n].pop(0)
+    # next 3 lines are used to save the value count of each prediction
     column_predictions = (predictions_only[n])
     column_predictions_series = pd.Series(column_predictions)
     column_predictions_count = column_predictions_series.value_counts()
+    # print statements for terminal debugging
     print('map list:', predictions_map)
     print('predictions only:', predictions_only)
     print('column predictions:', column_predictions)
@@ -148,6 +152,7 @@ for n in range(len(column_headers)):
                       len=len(df_select),
                       origin=column_headers[n]))
         Predictions.append(column_predictions_count.index[0])
+        # if majority class, certainty is 100
         Certainty.append(100)
     # else threshold logic for no majority class
     else:
@@ -160,8 +165,12 @@ for n in range(len(column_headers)):
                           pred=column_predictions_count.index[i],
                           num_pred=column_predictions_count.iloc[i],
                           len=len(df_select)))
+            # when there is no majority class there are multiple predictions
             multiple_predictions.append(column_predictions_count.index[i])
+            # when there is no majority class, the certainty of each prediction is its percentage of predictions
+            # for that class
             multiple_certainties.append(column_predictions_count.iloc[i] / len(df_select) * 100)
+        # append to Predictions and Certainty lists - used for debugging and eval
         Predictions.append(multiple_predictions)
         Certainty.append(multiple_certainties)
 

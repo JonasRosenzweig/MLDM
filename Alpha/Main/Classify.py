@@ -188,14 +188,14 @@ def classify(df, save_name, json_name):
     # only includes predictions
     predictions_only = list(map(lambda item: [item], column_headers))
 
-
+    # for column in column headers
     for n in range(len(column_headers)):
         print_and_save('-----------Mapping column {num} of {len}-----------'
               .format(num=n+1, len=len(column_headers)))
         df_select = df_sampled[column_headers[n]]
-        # select column
+        # df_select: load selected column into separate dataframe
         df_select = df_select.astype(str)
-        # standardize data type to str
+        # standardize data type to str for tokenization and sequence padding in predict method
         fix_encoding(df_select)
         # attempt to fix wrongly decoded data
 
@@ -259,6 +259,7 @@ def classify(df, save_name, json_name):
         column_predictions = (predictions_only[n])
         column_predictions_series = pd.Series(column_predictions)
         column_predictions_count = column_predictions_series.value_counts()
+        # print_and_save for terminal output and text output - used for debugging
         print_and_save('predictions only: {f}'.format(f=predictions_only))
         print_and_save('column predictions: {f}'.format(f=column_predictions))
         print_and_save('column predictons series: {f}'.format(f=column_predictions_series))
@@ -337,14 +338,19 @@ def classify(df, save_name, json_name):
     print(Maj_Pred)
     df_renamed.columns = Maj_Pred
 
+    ## -  the following code including try/catch statements is for cleaning and formatting output in .csv- ##
+    ## - done after classification - ##
     df_prices = df_renamed.filter(like='UNIT_PRICE')
     # select price columns from df_renamed and load into df_prices
     df_colors = df_renamed.filter(like='COLOR')
     # select color column from df_renamed and load into df_colors
     df_colors = df_colors.astype(str)
     df_colors = df_colors.replace('\d+', '', regex=True)
-    df_colors = df_colors.replace('/', ' ')
-    df_colors = df_colors.replace(r'\'', ' ')
+    # remove all digits from color column
+    df_colors = df_colors.replace('/', ' ', regex=True)
+    # remove '/'
+    df_colors = df_colors.replace(r'\'', ' ', regex=True)
+    # remove '\'
 
     for column in df_colors:
         try:

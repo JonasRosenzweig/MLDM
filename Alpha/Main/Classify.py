@@ -259,7 +259,7 @@ def classify(df, save_name, json_name):
         column_predictions = (predictions_only[n])
         column_predictions_series = pd.Series(column_predictions)
         column_predictions_count = column_predictions_series.value_counts()
-        # print_and_save for terminal output and text output - used for debugging
+
         print_and_save('predictions only: {f}'.format(f=predictions_only))
         print_and_save('column predictions: {f}'.format(f=column_predictions))
         print_and_save('column predictons series: {f}'.format(f=column_predictions_series))
@@ -267,6 +267,7 @@ def classify(df, save_name, json_name):
         print_and_save('Majority class: {f}'.format(f=column_predictions_count.index[0]))
         print_and_save('Number of predictions: {f}'.format(f=column_predictions_count.iloc[0]))
         print_and_save('____________________________')
+        # print_and_save for terminal output and text output - used for debugging
 
         if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
             # if there is a majority class, i.e if the highest prediction count is greater than
@@ -385,13 +386,17 @@ def classify(df, save_name, json_name):
             pass
     try:
         cost_dict = {'COST_PRICE': cost_prices}
+        # create dict for cost price / unit price as determined by previous block (faulty)
         retail_dict = {'UNIT_PRICE': retail_prices}
         df_cost_prices = pd.DataFrame(cost_dict)
+        # create df from these dicts which are then appended to the full dataframe output
         df_retail_prices = pd.DataFrame(retail_dict)
     except UnboundLocalError:
         pass
     try:
         del df_renamed['UNIT_PRICE']
+        # delete original unit_price column from output df - it is now saved in separate dfs
+
     except KeyError:
         pass
     try:
@@ -423,12 +428,13 @@ def classify(df, save_name, json_name):
 
     print(df_renamed.head())
     Multi_Header1 = ['PRODUCTS']
-    # multi header first line for DanDomain data upload standard
     for y in range(len(df_renamed.columns)-1):
         Multi_Header1.append('')
     df_renamed.columns = pd.MultiIndex.from_arrays([Multi_Header1, df_renamed.columns])
-    print(df_renamed.head())
+    # multi header first line for DanDomain data upload standard (add 'PRODUCTS' to top line)
+    # using pd.MultiIndex
     os.chdir(demo_output)
+    # change directory to output for saving
     df_renamed.to_csv(mapped_filename, index=False)
     # save .csv
 

@@ -21,6 +21,7 @@ for n in range(len(list_files)):
     savename = 'mapped_' + os.path.basename(list_files[n])
     json_filename = filename.with_suffix('.json')
     Classify.classify(Classify.read_csv(list_files[n]), savename, json_filename)
+    # Classify takes a DataFrame, a savename for the output .csv and a savename for the output.json
 
 
 

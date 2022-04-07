@@ -125,25 +125,30 @@ def predictClass(text, tok, model):
     return prediction
 
 Predictions_list = []
+
 # evaluate method - takes a path of .csv product feed data
 # returns evaluation metrics: .txt, .csv
 # returns .json map
 def evaluate(path):
     listfiles = listdir(path)
+    # used for mapping entire column to the class whose percentage of mapped data is over the threshold
     THRESHOLD = 0.51
+    # number of data points sampled for classification - 10 is used for testing, in practice at least 100 should be used
     SAMPLE_AMOUNT = 30
+    # set random state for reproducibility
     RANDOM_STATE = 7
-    k = 0
 
     # for file in path
     for i in range(len(listfiles)):
         Predictions = []
         correct = 0
+        # correct counter for future automation of evaluation analysis
         dataset_filename = os.listdir(path)[i]
         print(dataset_filename)
         mapped_filename = 'mapped_' + dataset_filename
         dataset_path = os.path.join('../..', path, dataset_filename)
         df = pd.read_csv(dataset_path, error_bad_lines=False, engine='c', encoding='UTF-8', low_memory=False, dtype=str)
+        # sample SAMPLE_AMOUNT of rows from df with equal probability
         if len(df.index) >= SAMPLE_AMOUNT:
             try:
                 df = df.sample(SAMPLE_AMOUNT, random_state=RANDOM_STATE)
@@ -151,7 +156,10 @@ def evaluate(path):
                 pass
         df = df.reset_index(drop=True)
         column_headers = list(df.columns)
+        # predictions map - predictions will be appended, matching the column header
         predictions_map = list(map(lambda item: [item], column_headers))
+        # predictions only - map a list of size of column headers - headers will be popped
+        # only includes predictions
         predictions_only = list(map(lambda item: [item], column_headers))
 
         # for column in file
@@ -170,6 +178,7 @@ def evaluate(path):
                 targets = le.fit_transform(targets)
                 data = df_select[k]
                 print(data, column_headers[j])
+                # Custom rules: substring matching
                 if Substring_match(OTHER_Headers, column_headers[j]) or len(data) > 200:
                     predicted_class = 'CR-OTHER'
                     print('Custom rule applied - OTHER')
@@ -187,8 +196,9 @@ def evaluate(path):
                 elif data == 'nan':
                     predicted_class = 'NAN'
                 else:
-                    print('Model Prediction:')
+                    # model prediction
                     predicted_class = predictClass(data, tokenizer, model)
+                    print('Model Prediction:', predicted_class)
 
                 predictions_map[j].append(predicted_class)
                 predictions_only[j].append(predicted_class)
@@ -196,9 +206,13 @@ def evaluate(path):
             print('_________')
 
             predictions_only[j].pop(0)
+            # predictions_only is created from a dict with original headers, this pops them
+            # leaving only the predictions
             column_predictions = (predictions_only[j])
+            # predictions for selected column
             column_predictions_series = pd.Series(column_predictions)
             column_predictions_count = column_predictions_series.value_counts()
+            # value counts to tally number of predictions for each prediction
 
             if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
                 Predictions.append(column_predictions_count.index[0])

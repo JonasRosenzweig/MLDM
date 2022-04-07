@@ -1,3 +1,5 @@
+### Substring match ###
+
 OTHER_Headers = ['Washing','Ironing','Drying','Drycleaning','Bleaching','materiale','Materiale','Number','number','%',
                  'Type','type','Kolli','pct','Antal','Quantity','Qty','quantity','qty','Kode','kode','Fit','lukning',
                  'Category','category','Kategori','kategori','Weight','weight','Qty.','Customer','Units','Age','age',

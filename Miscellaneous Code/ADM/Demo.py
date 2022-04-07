@@ -28,9 +28,9 @@ EAN_REGEX = '(?<=\s)\d{13}(?=\s)'
 
 
 MODEL_DIR = \
-    r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.h5'
-TOKENIZER_DIR =\
-    r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.pkl'
+    r'/Data/Final/NAME_NUM_OTHER_Oversampled/models/NAME_NUM_OTHER_OVER_WORDEMB.h5'
+TOKENIZER_DIR = \
+    r'/Data/Final/NAME_NUM_OTHER_Oversampled/models/NAME_NUM_OTHER_OVER_WORDEMB.pkl'
 
 THRESHOLD = 0.51
 SAMPLE_AMOUNT = 10
@@ -60,7 +60,7 @@ def evaluate(num):
     mapped_filename = 'mapped_'+dataset_filename
     print('________________________________________________________________________')
     print('----------{}----------'.format(dataset_filename))
-    dataset_path = os.path.join("../..", PATH, dataset_filename)
+    dataset_path = os.path.join("../../..", PATH, dataset_filename)
     df = pd.read_csv(dataset_path, error_bad_lines=False, engine='c',
                  encoding='ISO-8859-14', low_memory=False, dtype=str)
     if len(df.index) >= SAMPLE_AMOUNT:
@@ -169,7 +169,7 @@ def evaluate(num):
     print('length multi', len(Multi_Header1))
     df_renamed.columns = pd.MultiIndex.from_arrays([Multi_Header1, df_renamed.columns])
     print(df_renamed.head())
-    os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Demo_Output')
+    os.chdir(r'/Demo_Output')
     df_renamed.to_csv(mapped_filename, index=False)
 
 

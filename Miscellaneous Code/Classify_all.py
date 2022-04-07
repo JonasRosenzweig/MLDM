@@ -1,3 +1,6 @@
+### Outdated Classify all - includes data transformation and cleaning ###
+# this script was used for the old multi-model approach
+
 import os
 import pandas as pd
 import pickle

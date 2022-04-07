@@ -1,3 +1,4 @@
+# testing EAN validator from stdnum
 from stdnum import ean
 
 def validate_EAN(string):

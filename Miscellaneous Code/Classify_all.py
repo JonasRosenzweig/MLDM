@@ -9,8 +9,6 @@ from keras.preprocessing import sequence
 import keras
 import re
 from os import listdir
-import types
-from sklearn.utils import shuffle
 
 # Change Raw Data to 2D and reduce based on fraction
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'

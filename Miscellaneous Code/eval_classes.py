@@ -2,7 +2,6 @@
 
 import os
 import pandas as pd
-from itertools import chain
 
 PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\test'
 classes = ['BOOL', 'DATE_TIME', 'DATE', 'URL', 'PROD_PHOTO_URL', 'PDF', 'LANGUAGE_ID', 'COUNT', 'INTERNAL_ID',
@@ -248,27 +247,7 @@ for j in range(len(list_files)):
     dataset_filename = os.listdir(PATH)[j]
     dataset_path = os.path.join("../..", PATH, dataset_filename)
     print(dataset_filename)
-    # BOOL_list.append(dataset_filename)
-    # DATE_TIME_list.append(dataset_filename)
-    # DATE_list.append(dataset_filename)
-    # URL_list.append(dataset_filename)
-    # PROD_PHOTO_URL_list.append(dataset_filename)
-    # PDF_list.append(dataset_filename)
-    # LANGUAGE_ID_list.append(dataset_filename)
-    # COUNT_list.append(dataset_filename)
-    # INTERNAL_ID_list.append(dataset_filename)
-    # PROD_CAT_ID_list.append(dataset_filename)
-    # PROD_TYPE_ID_list.append(dataset_filename)
-    # PROD_WEIGHT_list.append(dataset_filename)
-    # PRICE_list.append(dataset_filename)
-    # CURRENCY_CODE_list.append(dataset_filename)
-    # AUTHOR_list.append(dataset_filename)
-    # DESC_LONG_list.append(dataset_filename)
-    # MANUFAC_ID_list.append(dataset_filename)
-    # PROD_NAME_list.append(dataset_filename)
-    # PROD_NUM_list.append(dataset_filename)
-    # TITLE_list.append(dataset_filename)
-    # META_DESCRIPTION_list.append(dataset_filename)
+
     csv_name.append(dataset_filename)
     evaluate_classes_2(dataset_path)
     i -= 1
@@ -282,18 +261,3 @@ table = {'CSV': csv_name, 'BOOL': BOOL_list, 'DATE': DATE_list, 'URL': URL_list,
 class_accuracies_df = pd.DataFrame(table)
 os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
 class_accuracies_df.to_csv('class_accuracies_new_logic_8_class.csv')
-
-# class_accuracies = list(chain(BOOL_list, DATE_TIME_list, DATE_list, URL_list, PROD_PHOTO_URL_list, PDF_list,
-#                                 LANGUAGE_ID_list, COUNT_list, INTERNAL_ID_list, PROD_CAT_ID_list, PROD_TYPE_ID_list,
-#                                 PROD_WEIGHT_list, PRICE_list, CURRENCY_CODE_list, AUTHOR_list,
-#                                 DESC_LONG_list, MANUFAC_ID_list, PROD_NAME_list, PROD_NUM_list, TITLE_list,
-#                                 META_DESCRIPTION_list))
-# print(class_accuracies)
-# with open('class_accuracies.txt', 'w') as f:
-#         os.chdir(r'C:\Users\mail\PycharmProjects\MLDM\Data\accuracies')
-#         for item in class_accuracies:
-#             f.write(f'{item}\n')
-
-# my_list = ['foo', 'fob', 'faz', 'funk']
-# string = 'bar'
-# list2 = list(map(lambda orig_string: orig_string + string, my_list))

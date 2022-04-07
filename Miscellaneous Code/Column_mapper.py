@@ -1,11 +1,11 @@
-import os
+### Early column mapper script ###
+
 import pandas as pd
 import pickle
 import keras
 from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing import sequence
-from itertools import repeat
-import numpy as np
+
 
 threshold = 0.75
 

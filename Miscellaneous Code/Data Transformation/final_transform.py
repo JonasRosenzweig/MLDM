@@ -1,3 +1,4 @@
+### Script for training transformation of prod data - concats all data from dir for prod name, num and price ###
 import os
 import pandas as pd
 import numpy as np
@@ -11,7 +12,7 @@ classes_series = pd.Series(classes, index=df.columns)
 df = df.append(classes_series, ignore_index=True)
 df.to_csv('test1.csv', index=False)
 
-PATH = r'/Data/Raw Data'
+PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\Raw Data'
 list_files = listdir(PATH)
 
 data_list = []

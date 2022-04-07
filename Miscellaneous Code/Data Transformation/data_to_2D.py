@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from os import listdir
 
-PATH = r'/Data/MVP/transform'
+PATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\MVP\transform'
 SAVEPATH = r'C:\Users\mail\PycharmProjects\MLDM\Data\MVP'
 
 list_files = listdir(PATH)

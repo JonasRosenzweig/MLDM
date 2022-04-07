@@ -55,42 +55,42 @@ IMAGE_REGEX = '([0-9a-zA-Z\._-]+.(png|PNG|gif|GIF|jp[e]?g|JP[E]?G))'
 INTEGER_REGEX = '(^\d{1,4}$)'
 
 # Keras models - have not been commited to github as they take up too much space
-model_4 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\4ClassSimple.h5')
-model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\3ClassSimpleNumID.h5')
-model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\5ClassSimpleNumID.h5')
-model_6 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\6ClassSimple.h5')
-model_14 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\14ClassSimple.h5')
-model_PRODCAT_MANU_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+model_4 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\4ClassSimple.h5')
+model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\3ClassSimpleNumID.h5')
+model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\5ClassSimpleNumID.h5')
+model_6 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\6ClassSimple.h5')
+model_14 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\14ClassSimple.h5')
+model_PRODCAT_MANU_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                                      r'\3class_prodcat_manu_unknown.h5')
-model_PRODNAME_TITLE_AUTHOR = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+model_PRODNAME_TITLE_AUTHOR = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                                       r'\3class_prodname_title_author.h5')
-model_COUNT_PRODTYPE_INTERNAL_MANUFAC = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models'
+model_COUNT_PRODTYPE_INTERNAL_MANUFAC = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models'
                                                                 r'\organized\4class_count_prodtype_internal_manufac.h5')
-model_DESCLONG_DESCMETA_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models'
+model_DESCLONG_DESCMETA_UNKNOWN = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models'
                                                           r'\organized\3class_desclong_descmeta_unknown.h5')
-model_7 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+model_7 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                   r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.h5')
-model_8 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+model_8 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                   r'\8_class_PNUM_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.h5')
 print("Models Loaded")
 
 # Tokenizers
-tokenizer_4 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer.pkl', 'rb')
-tokenizer_3 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_3_numID.pkl', 'rb')
-tokenizer_5 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_5_numID.pkl', 'rb')
-tokenizer_6 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_6.pkl', 'rb')
-tokenizer_14 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_14.pkl', 'rb')
-tokenizer_PRODCAT_MANU_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_4 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer.pkl', 'rb')
+tokenizer_3 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_3_numID.pkl', 'rb')
+tokenizer_5 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_5_numID.pkl', 'rb')
+tokenizer_6 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_6.pkl', 'rb')
+tokenizer_14 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_14.pkl', 'rb')
+tokenizer_PRODCAT_MANU_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                       r'\3class_prodcat_manu_unknown.pkl', 'rb')
-tokenizer_PRODNAME_TITLE_AUTHOR = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_PRODNAME_TITLE_AUTHOR = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                        r'\3class_prodname_title_author.pkl', 'rb')
-tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_COUNT_PRODTYPE_INTERNAL_MANUFAC = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                                  r'\4class_count_prodtype_internal_manufac.pkl', 'rb')
-tokenizer_DESCLONG_DESCMETA_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_DESCLONG_DESCMETA_UNKNOWN = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                                            r'\3class_desclong_descmeta_unknown.pkl', 'rb')
-tokenizer_7 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_7 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                    r'\7_class_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.pkl', 'rb')
-tokenizer_8 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized'
+tokenizer_8 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized'
                    r'\8_class_PNUM_PNAME_AUT_TIT_DESCL_DESCM_MANID_PCATID.pkl', 'rb')
 print("Tokenizers loaded")
 

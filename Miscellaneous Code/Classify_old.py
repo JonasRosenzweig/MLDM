@@ -17,18 +17,18 @@ URL_REGEX = '[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+
 IMAGE_REGEX = '([0-9a-zA-Z\._-]+.(png|PNG|gif|GIF|jp[e]?g|JP[E]?G))'
 INTEGER_REGEX = '(^\d{1,4}$)'
 
-model_4 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\4ClassSimple.h5')
-model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\3ClassSimpleNumID.h5')
-model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\5ClassSimpleNumID.h5')
-model_6 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\6ClassSimple.h5')
-model_14 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\14ClassSimple.h5')
+model_4 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\4ClassSimple.h5')
+model_3 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\3ClassSimpleNumID.h5')
+model_5 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\5ClassSimpleNumID.h5')
+model_6 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\6ClassSimple.h5')
+model_14 = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\14ClassSimple.h5')
 
 print("Models Loaded")
-tokenizer_4 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer.pkl', 'rb')
-tokenizer_3 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_3_numID.pkl', 'rb')
-tokenizer_5 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_5_numID.pkl', 'rb')
-tokenizer_6 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_6.pkl', 'rb')
-tokenizer_14 = open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\tokenizer_14.pkl', 'rb')
+tokenizer_4 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer.pkl', 'rb')
+tokenizer_3 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_3_numID.pkl', 'rb')
+tokenizer_5 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_5_numID.pkl', 'rb')
+tokenizer_6 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_6.pkl', 'rb')
+tokenizer_14 = open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\tokenizer_14.pkl', 'rb')
 print("Tokenizers loaded")
 tok_3 = pickle.load(tokenizer_3)
 tok_4 = pickle.load(tokenizer_4)

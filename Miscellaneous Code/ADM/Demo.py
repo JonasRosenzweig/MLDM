@@ -12,20 +12,29 @@ from os import listdir
 from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing import sequence
 
-COUNTRY_CODES = ['CN','CZ','FR','AT','JP','TR','DK','DE','HU','US','IE','GB','BA','PL','PT','IT','MT','IN','ES','PH',
-'MG','TH','PK','AU','TW','SE','LT','VN','NL','CA','CD','MX','BE','DZ','BR','CH','ID','CL','KR','RO','LA','TN','FI','AF',
-'AX','AL','AS','AD','AO','AI','AQ','AG','AR','AM','AW','AZ','BS','BH','BD','BB','BY','BZ','BJ','BM','BT','BO','BQ','BW',
-'BV','IO','BN','BG','BF','BI','KH','CM','CV','KY','CF','TD','CX','CC','CO','KM','CG','CK','CR','CI','HR','CU','CW','CY',
-'DJ','DM','DO','EC','EG','SV','GQ','ER','EE','ET','FK','FO','FJ','GF','PF','TF','GA','GM','GE','GH','GI','GR','GL','GD',
-'GP','GU','GT','GG','GN','GW','GY','HT','HM','VA','HN','HK','IS','IR','IQ','IM','IL','JM','JE','JO','KZ','KE','KI','KP',
-'KW','KG','LV','LB','LS','LR','LY','LI','LU','MO','MK','MW','MY','MV','ML','MH','MQ','MR','MU','YT','FM','MD','MC','MN',
-'ME','MS','MA','MZ','MM','NA','NR','NP','NC','NZ','NI','NE','NG','NU','NF','MP','NO','OM','PW','PS','PA','PG','PY','PE',
-'PN','PR','QA','RE','RU','RW','BL','SH','KN','LC','MF','PM','VC','WS','SM','ST','SA','SN','RS','SC','SL','SG','SX','SK',
-'SI','SB','SO','ZA','GS','SS','LK','SD','SR','SJ','SZ','SY','TJ','TZ','TL','TG','TK','TO','TT','TM','TC','TV','UG','UA',
-'AE','UM','UY','UZ','VU','VE','VG','VI','WF','EH','YE','ZM','ZW']
+COUNTRY_CODES = ['CN', 'CZ', 'FR', 'AT', 'JP', 'TR', 'DK', 'DE', 'HU', 'US', 'IE', 'GB', 'BA', 'PL', 'PT', 'IT', 'MT',
+                 'IN', 'ES', 'PH',
+                 'MG', 'TH', 'PK', 'AU', 'TW', 'SE', 'LT', 'VN', 'NL', 'CA', 'CD', 'MX', 'BE', 'DZ', 'BR', 'CH', 'ID',
+                 'CL', 'KR', 'RO', 'LA', 'TN', 'FI', 'AF',
+                 'AX', 'AL', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY',
+                 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BQ', 'BW',
+                 'BV', 'IO', 'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CV', 'KY', 'CF', 'TD', 'CX', 'CC', 'CO', 'KM', 'CG',
+                 'CK', 'CR', 'CI', 'HR', 'CU', 'CW', 'CY',
+                 'DJ', 'DM', 'DO', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ', 'GF', 'PF', 'TF', 'GA',
+                 'GM', 'GE', 'GH', 'GI', 'GR', 'GL', 'GD',
+                 'GP', 'GU', 'GT', 'GG', 'GN', 'GW', 'GY', 'HT', 'HM', 'VA', 'HN', 'HK', 'IS', 'IR', 'IQ', 'IM', 'IL',
+                 'JM', 'JE', 'JO', 'KZ', 'KE', 'KI', 'KP',
+                 'KW', 'KG', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LU', 'MO', 'MK', 'MW', 'MY', 'MV', 'ML', 'MH', 'MQ',
+                 'MR', 'MU', 'YT', 'FM', 'MD', 'MC', 'MN',
+                 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NC', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MP', 'NO',
+                 'OM', 'PW', 'PS', 'PA', 'PG', 'PY', 'PE',
+                 'PN', 'PR', 'QA', 'RE', 'RU', 'RW', 'BL', 'SH', 'KN', 'LC', 'MF', 'PM', 'VC', 'WS', 'SM', 'ST', 'SA',
+                 'SN', 'RS', 'SC', 'SL', 'SG', 'SX', 'SK',
+                 'SI', 'SB', 'SO', 'ZA', 'GS', 'SS', 'LK', 'SD', 'SR', 'SJ', 'SZ', 'SY', 'TJ', 'TZ', 'TL', 'TG', 'TK',
+                 'TO', 'TT', 'TM', 'TC', 'TV', 'UG', 'UA',
+                 'AE', 'UM', 'UY', 'UZ', 'VU', 'VE', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
 
 EAN_REGEX = '(?<=\s)\d{13}(?=\s)'
-
 
 MODEL_DIR = \
     r'C:\Users\mail\PycharmProjects\MLDM\Data\Final\NAME_NUM_OTHER_Oversampled\models\NAME_NUM_OTHER_OVER_WORDEMB.h5'
@@ -41,6 +50,7 @@ tokenizer = pickle.load(open(TOKENIZER_DIR, 'rb'))
 le = LabelEncoder()
 print('Model, Tokenizer and LabelEncoder loaded.')
 
+
 def predictClass(text, tok, model):
     text_pad = sequence.pad_sequences(tok.texts_to_sequences([text]), maxlen=300)
     predict_x = model.predict(text_pad)
@@ -48,6 +58,7 @@ def predictClass(text, tok, model):
     score = le.inverse_transform(predict_class)
     prediction = score[0]
     return prediction
+
 
 PATH = r'C:\Users\mail\Downloads\data\Eval Datasets'
 list_files = listdir(PATH)
@@ -57,12 +68,12 @@ k = 0
 def evaluate(num):
     correct = 0
     dataset_filename = os.listdir(PATH)[num]
-    mapped_filename = 'mapped_'+dataset_filename
+    mapped_filename = 'mapped_' + dataset_filename
     print('________________________________________________________________________')
     print('----------{}----------'.format(dataset_filename))
     dataset_path = os.path.join("../../..", PATH, dataset_filename)
     df = pd.read_csv(dataset_path, error_bad_lines=False, engine='c',
-                 encoding='ISO-8859-14', low_memory=False, dtype=str)
+                     encoding='ISO-8859-14', low_memory=False, dtype=str)
     if len(df.index) >= SAMPLE_AMOUNT:
         try:
             df = df.sample(SAMPLE_AMOUNT,
@@ -83,10 +94,9 @@ def evaluate(num):
     Maj_Pred = []
     Certainty = []
 
-
     for n in range(len(column_headers)):
         print('----------Mapping column {num} of {len}----------'
-              .format(num=n+1, len=len(column_headers)))
+              .format(num=n + 1, len=len(column_headers)))
         df_select = df[column_headers[n]]
         # sequence padding and tokenization of data requires string type
         df_select = df_select.astype(str)
@@ -94,7 +104,7 @@ def evaluate(num):
         multiple_certainties = []
 
         for m in range(len(df_select)):
-            class_predictions =[]
+            class_predictions = []
             targets = TARGETS
             targets = le.fit_transform(targets)
             data = df_select[m]
@@ -104,7 +114,7 @@ def evaluate(num):
                 predicted_class = 'OTHER'
             else:
                 predicted_class = predictClass(data, tokenizer, model)
-            #predictions_map[n].append(predicted_class)
+            # predictions_map[n].append(predicted_class)
             predictions_only[n].append(predicted_class)
             print('Data: {data}, Class Prediction: {prediction}'
                   .format(data=data, prediction=predicted_class))
@@ -114,12 +124,11 @@ def evaluate(num):
         column_predictions_series = pd.Series(column_predictions)
         column_predictions_count = column_predictions_series.value_counts()
         print('----------Column Mapping Summary----------')
-        #print('column predictions series:', column_predictions_series)
-        #print('column predictions count:', column_predictions_count)
+        # print('column predictions series:', column_predictions_series)
+        # print('column predictions count:', column_predictions_count)
         print('predicted class:', column_predictions_count.index[0])
         print('number of classifications:', column_predictions_count.iloc[0])
         predictions_map[n].append(column_predictions_count.index[0])
-
 
         if column_predictions_count.iloc[0] > len(df_select) * THRESHOLD:
             print(column_predictions_count.index[0], 'is the Majority Predicted Class.')
@@ -139,7 +148,7 @@ def evaluate(num):
                   .format(origin=column_headers[n]))
             for i in range(len(column_predictions_count)):
                 print('Predicted class {i}: {pred}; {num_pred} of {len} predictions.'
-                      .format(i=i+1,
+                      .format(i=i + 1,
                               pred=column_predictions_count.index[i],
                               num_pred=column_predictions_count.iloc[i],
                               len=len(df_select)))
@@ -153,7 +162,7 @@ def evaluate(num):
 
     print('----------Dataset Mapping Summary----------')
     print('map list:', predictions_map)
-    #print('predictions only:', predictions_only)
+    # print('predictions only:', predictions_only)
     print('Predictions:', Predictions)
     print('Percentages:', Certainty)
     print(df.head())
@@ -163,7 +172,7 @@ def evaluate(num):
     del df_renamed['OTHER']
     print(df_renamed.head())
     Multi_Header1 = ['PRODUCTS']
-    for y in range(len(df_renamed.columns)-1):
+    for y in range(len(df_renamed.columns) - 1):
         Multi_Header1.append('')
     print('length cols', len(df_renamed.columns))
     print('length multi', len(Multi_Header1))
@@ -171,8 +180,6 @@ def evaluate(num):
     print(df_renamed.head())
     os.chdir(r'/Demo_Output')
     df_renamed.to_csv(mapped_filename, index=False)
-
-
 
 
 evaluate(25)

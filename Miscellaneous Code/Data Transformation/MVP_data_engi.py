@@ -1,4 +1,5 @@
 ### Old Data engineering script for for early DanDomain classifier MVP ###
+# concatenates Name, Description, Price, Amount and EAN columns for all data and oversamples
 
 import pandas as pd
 import numpy as np

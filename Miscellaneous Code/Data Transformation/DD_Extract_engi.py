@@ -1,3 +1,5 @@
+### Early data engineering script - transforms data into 2d column for training, also splits train/test sets ###
+
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split

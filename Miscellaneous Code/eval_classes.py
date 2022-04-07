@@ -1,3 +1,5 @@
+### Eval script for automated accuracy analysis of Column_mapper.py output ###
+
 import os
 import pandas as pd
 from itertools import chain

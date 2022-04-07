@@ -15,8 +15,8 @@ df = df.astype(str)
 df = df.sample(1000, random_state=7)
 df = df.reset_index(drop=True)
 
-model = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.h5')
-tokenizer = pickle.load(open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.pkl', 'rb'))
+model = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized\6_class_MVP.h5')
+tokenizer = pickle.load(open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized\6_class_MVP.pkl', 'rb'))
 le = LabelEncoder()
 print('Model, Tokenizer and LabelEncoder loaded.')
 

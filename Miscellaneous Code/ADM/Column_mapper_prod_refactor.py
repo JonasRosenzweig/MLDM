@@ -62,10 +62,8 @@ df = df.reset_index(drop=True)
 # load NLP multi-class classification model file, tokenizer and label encoder
 #model = keras.models.load_model(r'/var/www/html/ADM_Data/6_class_MVP.h5')
 #tokenizer = pickle.load(open(r'/var/www/html/ADM_Data/6_class_MVP.pkl','rb'))
-model = keras.models.load_model\
-   (r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.h5')
-tokenizer = pickle.load\
-    (open(r'C:\Users\mail\PycharmProjects\MLDM\Main\Models\organized\6_class_MVP.pkl', 'rb'))
+model = keras.models.load_model(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized\6_class_MVP.h5')
+tokenizer = pickle.load(open(r'C:\Users\mail\PycharmProjects\MLDM\Miscellaneous Code\Models\organized\6_class_MVP.pkl', 'rb'))
 le = LabelEncoder()
 
 # function to make predictions
